@@ -55,7 +55,6 @@ class _RegisterPageState extends State<RegisterPage> {
         //   MaterialPageRoute(builder: (context) => LoginPage()),
         // );
         Navigator.pop(context);
-        Navigator.popAndPushNamed(context, '/login');
       },
     );
   }
