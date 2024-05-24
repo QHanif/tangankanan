@@ -38,6 +38,41 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   firebase_auth_web: ^5.11.4
+  # firebase_analytics: ^9.0.2
+
+   # Firebase packages
+  # firebase_core: "^1.10.5" # Required for all Firebase services
+  # firebase_auth: "^3.3.3" # For user authentication
+  cloud_firestore: ^4.17.3 # For storing and retrieving data
+  firebase_storage: ^11.7.5 # If you plan to store user profile pictures or project pictures
+
+  # State management
+  provider: "^6.0.1" # or riverpod, bloc, etc. depending on your preference
+
+  # Navigation
+  # flutter_navigation: "^1.0.0" # or any other navigation package you prefer
+
+  # Date and time handling
+  intl: ^0.19.0
+
+  # HTTP requests (if needed)
+  http: ^1.2.1
+
+  # For form validation
+  # form_field_validator: "^2.0.1"
+
+  # For loading, dialog, and toast messages
+  flutter_easyloading: "^3.0.3"
+
+  # For handling payments
+  # stripe_payment: "^1.1.1" # or any other payment gateway you prefer
+
+  # For sharing content
+  share: "^2.0.4"
+
+  # For handling images
+  image_picker: ^1.1.1
+  cached_network_image: "^3.2.0"
   
 
 dev_dependencies:
@@ -49,7 +84,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

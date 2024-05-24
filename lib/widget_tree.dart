@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tangankanan/auth.dart';
-import 'package:tangankanan/pages/login_page.dart';
-import 'package:tangankanan/pages/home_page.dart';
+import 'package:tangankanan/services/auth_service.dart';
+import 'package:tangankanan/views/common/login_page.dart';
+import 'package:tangankanan/views/home_page.dart';
 
 class WidgetTree extends StatelessWidget {
   const WidgetTree({Key? key}) : super(key: key);

@@ -1,13 +1,15 @@
+
+
 {
   "project_info": {
-    "project_number": "103902007815",
-    "project_id": "tangankanan-61e17",
-    "storage_bucket": "tangankanan-61e17.appspot.com"
+    "project_number": "1006183749872",
+    "project_id": "tangankanan-app",
+    "storage_bucket": "tangankanan-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:103902007815:android:f989813569d545fe4e10a2",
+        "mobilesdk_app_id": "1:1006183749872:android:70c4de272f26a0e9bb0a35",
         "android_client_info": {
           "package_name": "com.example.tangankanan"
         }
@@ -15,7 +17,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDdP8oD7WtCWYdpeu2XCsnMtLHu7KK8utU"
+          "current_key": "AIzaSyApHr2qRE4BY2YzRR132pp4hVBxgBbt3tg"
         }
       ],
       "services": {

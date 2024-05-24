@@ -1,20 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tangankanan/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:tangankanan/auth.dart';
-// import '../auth.dart';
+import 'package:tangankanan/views/common/register_page.dart';
+import 'package:tangankanan/views/common/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String? errorMessage = '';
-  bool isLogin = true;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String errorMessage = '';
 
   Future<void> signInWithEmailAndPAssword() async {
     try {
@@ -22,28 +21,12 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      print('User signed in');
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.toString();
       });
     }
-  }
-
-  Future<void> createUserWithEmailAndPassword() async {
-    try {
-      await Auth().createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-      });
-    }
-  }
-
-  Widget _title() {
-    return const Text('Tangankanan');
   }
 
   Widget _entryField(String title, TextEditingController controller) {
@@ -61,20 +44,32 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _submitButton() {
     return ElevatedButton(
-      onPressed:
-          isLogin ? signInWithEmailAndPAssword : createUserWithEmailAndPassword,
-      child: Text(isLogin ? 'Login' : 'Register'),
+      onPressed: signInWithEmailAndPAssword,
+      child: Text('Login'),
     );
   }
 
-  Widget _loginOrRegisterButton() {
+  Widget _signUpButton() {
+    return TextButton(
+      child: Text("Don't have an account? Sign up"),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RegisterPage()),
+        );
+      },
+    );
+  }
+
+  Widget _forgotPasswordButton() {
     return TextButton(
       onPressed: () {
-        setState(() {
-          isLogin = !isLogin;
-        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+        );
       },
-      child: Text(isLogin ? 'Create an account' : 'Already have an account?'),
+      child: Text("Forgot Password?"),
     );
   }
 
@@ -82,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
+        title: Text('Login'),
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
@@ -92,7 +87,8 @@ class _LoginPageState extends State<LoginPage> {
             _entryField('Password', _passwordController),
             _errorMessage(),
             _submitButton(),
-            _loginOrRegisterButton(),
+            _signUpButton(),
+            _forgotPasswordButton(),
           ],
         ),
       ),
