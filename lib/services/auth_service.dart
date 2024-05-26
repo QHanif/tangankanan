@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -23,7 +25,7 @@ class Auth {
     required String username,
     required String phoneNumber,
     required String role,
-    required DateTime? birthdate, // Added parameter
+    required DateTime? birthdate,
   }) async {
     UserCredential userCredential = await _firebaseAuth
         .createUserWithEmailAndPassword(email: email, password: password);
@@ -38,9 +40,10 @@ class Auth {
         'createdProjects': role == 'creator' ? [] : null,
         'backedProjects': role == 'backer' ? [] : null,
         'registerDate': DateTime.now().toIso8601String(),
-        'birthdate': birthdate?.toIso8601String(), // Store birthdate
-        'profilePictureUrl':
-            null // Assuming you will set this later or modify to include as a parameter
+        'birthdate': birthdate?.toIso8601String(),
+        'profilePictureUrl': await _storage
+            .ref('public/default_profile_pic.jpg')
+            .getDownloadURL(),
       });
     }
   }
