@@ -152,19 +152,12 @@ class _CreatorProjectDetailsPageState extends State<CreatorProjectDetailsPage> {
                           _buildFundHistoryChart(),
                           SizedBox(height: 20),
                           Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, '/community_updates_page',
-                                    arguments: project);
-                              },
-                              style: AppStyles.primaryButtonStyle,
-                              child: const Text(
-                                'Post Community Update',
-                                style: TextStyle(
-                                    fontSize: 16.0, color: Colors.white),
-                              ),
-                            ),
+                            child:
+                                AppStyles.button('Post Community Update', () {
+                              Navigator.pushNamed(
+                                  context, '/community_updates_page',
+                                  arguments: project);
+                            }),
                           ),
                         ],
                       );

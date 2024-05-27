@@ -6,6 +6,7 @@ class Update extends ChangeNotifier {
   final String title;
   final String description;
   final DateTime date;
+  String? imageUrl; // Added this line
 
   Update({
     required this.updateId,
@@ -13,6 +14,7 @@ class Update extends ChangeNotifier {
     required this.title,
     required this.description,
     required this.date,
+    this.imageUrl, // Added this line
   });
 
   factory Update.fromMap(Map<String, dynamic> map) {
@@ -22,6 +24,7 @@ class Update extends ChangeNotifier {
       title: map['title'],
       description: map['description'],
       date: DateTime.parse(map['date']),
+      imageUrl: map['imageUrl'], // Added this line
     );
   }
 
@@ -31,6 +34,7 @@ class Update extends ChangeNotifier {
     String? title,
     String? description,
     DateTime? date,
+    String? imageUrl, // Added this line
   }) {
     return Update(
       updateId: updateId ?? this.updateId,
@@ -38,6 +42,7 @@ class Update extends ChangeNotifier {
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
+      imageUrl: imageUrl ?? this.imageUrl, // Added this line
     );
   }
 
@@ -48,6 +53,7 @@ class Update extends ChangeNotifier {
       'title': title,
       'description': description,
       'date': date.toIso8601String(),
+      'imageUrl': imageUrl, // Added this line
     };
   }
 }

@@ -9,6 +9,7 @@ import 'package:tangankanan/views/backers/project_catalog_page.dart';
 import 'package:tangankanan/views/creators/creator_project_details_page.dart';
 import 'package:tangankanan/views/creators/creator_project_page.dart';
 import 'package:tangankanan/views/creators/create_project_page.dart';
+import 'package:tangankanan/views/creators/community_updates_page.dart'; // Import the new page
 import 'package:tangankanan/views/admin/admin_project_catalog_page.dart';
 import 'package:tangankanan/app_root.dart';
 import 'package:tangankanan/models/project.dart';
@@ -34,6 +35,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final project = settings.arguments as Project;
       return MaterialPageRoute(
           builder: (context) => CreatorProjectDetailsPage(project: project));
+    case '/community_updates_page': // Add the new route
+      final project = settings.arguments as Project;
+      return MaterialPageRoute(
+          builder: (context) => CommunityUpdatesPage(project: project));
     default:
       return MaterialPageRoute(builder: (context) => AppRoot());
   }

@@ -19,11 +19,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   String? _phoneNumber;
   File? _profileImage;
   String? _profileImageUrl;
+  late Future<void> _userDataFuture;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _userDataFuture = _loadUserData();
   }
 
   Future<void> _loadUserData() async {
@@ -93,7 +94,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
-        initialValue: initialValue,
+        initialValue: initialValue, // This sets the initial value
         decoration: InputDecoration(
           labelText: labelText,
           fillColor: Colors.white,
@@ -123,56 +124,65 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       appBar: AppBar(
         title: Text('Update Profile'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey[200],
-                  child: _profileImage != null
-                      ? ClipOval(
-                          child: Image.file(
-                            _profileImage!,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : _profileImageUrl != null
-                          ? ClipOval(
-                              child: Image.network(
-                                _profileImageUrl!,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.camera_alt,
-                                    size: 40, color: Colors.grey),
-                                Text('Upload a profile picture',
-                                    style: TextStyle(color: Colors.grey)),
-                              ],
-                            ),
+      body: FutureBuilder(
+        future: _userDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[200],
+                        child: _profileImage != null
+                            ? ClipOval(
+                                child: Image.file(
+                                  _profileImage!,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : _profileImageUrl != null
+                                ? ClipOval(
+                                    child: Image.network(
+                                      _profileImageUrl!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.camera_alt,
+                                          size: 40, color: Colors.grey),
+                                      Text('Upload a profile picture',
+                                          style: TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    _buildTextField(
+                        'Username', _username, (value) => _username = value),
+                    _buildTextField('Phone Number', _phoneNumber,
+                        (value) => _phoneNumber = value),
+                    SizedBox(height: 20),
+                    AppStyles.button('Save Changes', _updateProfile),
+                  ],
                 ),
               ),
-              SizedBox(height: 20),
-              _buildTextField(
-                  'Username', _username, (value) => _username = value),
-              _buildTextField('Phone Number', _phoneNumber,
-                  (value) => _phoneNumber = value),
-              SizedBox(height: 20),
-              AppStyles.button('Save Changes', _updateProfile),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }
