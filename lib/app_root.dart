@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tangankanan/views/admin/admin_project_catalog_page.dart';
+import 'package:tangankanan/views/backers/project_catalog_page.dart';
 import 'package:tangankanan/views/common/login_page.dart';
-import 'package:tangankanan/views/common/profile_page.dart';
+// import 'package:tangankanan/views/common/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tangankanan/views/creators/creator_project_page.dart';
 
-class WidgetTree extends StatelessWidget {
-  const WidgetTree({Key? key}) : super(key: key);
+class AppRoot extends StatelessWidget {
+  const AppRoot({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class WidgetTree extends StatelessWidget {
           // Fetch the role from Firestore
           return FutureBuilder<DocumentSnapshot>(
             future: FirebaseFirestore.instance
-                .collection('Users')
+                .collection('users')
                 .doc(snapshot.data!.uid)
                 .get(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> roleSnapshot) {
@@ -25,9 +28,17 @@ class WidgetTree extends StatelessWidget {
                   var data = roleSnapshot.data!.data()
                       as Map<String, dynamic>; // Cast to Map
                   if (data.containsKey('role')) {
-                    // Now you can use containsKey
-                    // Pass the role to the ProfilePage
-                    return ProfilePage(role: data['role']);
+                    // Redirect based on the role
+                    switch (data['role']) {
+                      case 'creator':
+                        return const CreatorProjectPage();
+                      case 'backer':
+                        return const ProjectCatalogPage();
+                      case 'admin':
+                        return const AdminProjectCatalogPage();
+                      default:
+                        return const LoginPage(); // Default to login page if role is not recognized
+                    }
                   } else {
                     // Return LoginPage if 'role' key is missing
                     return const LoginPage();
@@ -38,7 +49,7 @@ class WidgetTree extends StatelessWidget {
                 }
               } else {
                 // Show loading indicator while fetching role
-                return CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               }
             },
           );

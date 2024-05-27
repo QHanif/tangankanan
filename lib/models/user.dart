@@ -25,16 +25,18 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userId: json['userId'],
-      username: json['username'],
-      email: json['email'],
-      birthdate: DateTime.parse(json['birthdate']),
-      phoneNumber: json['phoneNumber'],
-      registerDate: DateTime.parse(json['registerDate']),
-      role: json['role'],
-      createdProjects: List<String>.from(json['createdProjects']),
-      backedProjects: List<String>.from(json['backedProjects']),
-      profilePictureUrl: json['profilePictureUrl'],
+      userId: json['userId'] ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      birthdate:
+          DateTime.parse(json['birthdate'] ?? DateTime.now().toIso8601String()),
+      phoneNumber: json['phoneNumber'] ?? '',
+      registerDate: DateTime.parse(
+          json['registerDate'] ?? DateTime.now().toIso8601String()),
+      role: json['role'] ?? '',
+      createdProjects: List<String>.from(json['createdProjects'] ?? []),
+      backedProjects: List<String>.from(json['backedProjects'] ?? []),
+      profilePictureUrl: json['profilePictureUrl'] ?? '',
     );
   }
 

@@ -36,46 +36,14 @@ class Project {
       title: map['title'],
       description: map['description'],
       projectPicUrl: map['projectPicUrl'],
-      fundGoal: map['fundGoal'],
-      currentFund: map['currentFund'],
+      fundGoal: map['fundGoal'].toDouble(),
+      currentFund: map['currentFund'].toDouble(),
       startDate: DateTime.parse(map['startDate']),
       endDate: DateTime.parse(map['endDate']),
       verificationStatus: map['verificationStatus'],
       backers: List<String>.from(map['backers']),
       updates: List<String>.from(map['updates']),
       projectStatus: map['projectStatus'],
-    );
-  }
-
-  Project copyWith({
-    String? projectId,
-    String? creatorId,
-    String? title,
-    String? description,
-    String? projectPicUrl,
-    double? fundGoal,
-    double? currentFund,
-    DateTime? startDate,
-    DateTime? endDate,
-    String? verificationStatus,
-    List<String>? backers,
-    List<String>? updates,
-    String? projectStatus,
-  }) {
-    return Project(
-      projectId: projectId ?? this.projectId,
-      creatorId: creatorId ?? this.creatorId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      projectPicUrl: projectPicUrl ?? this.projectPicUrl,
-      fundGoal: fundGoal ?? this.fundGoal,
-      currentFund: currentFund ?? this.currentFund,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      verificationStatus: verificationStatus ?? this.verificationStatus,
-      backers: backers ?? List<String>.from(this.backers),
-      updates: updates ?? List<String>.from(this.updates),
-      projectStatus: projectStatus ?? this.projectStatus,
     );
   }
 

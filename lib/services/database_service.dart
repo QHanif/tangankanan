@@ -3,11 +3,21 @@ import '../models/project.dart';
 import '../models/pledge.dart';
 import '../models/fund_history.dart';
 import '../models/update.dart';
+import '../models/user.dart'; // Make sure to import the User model
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Project CRUD Operations
+
+  Future<List<Project>> fetchProjectsByCreatorId(String creatorId) async {
+    var result = await _db
+        .collection('projects')
+        .where('creatorId', isEqualTo: creatorId)
+        .get();
+    return result.docs.map((doc) => Project.fromMap(doc.data())).toList();
+  }
+
   Future<List<Project>> fetchProjects() async {
     var result = await _db.collection('projects').get();
     return result.docs.map((doc) => Project.fromMap(doc.data())).toList();
@@ -23,6 +33,19 @@ class DatabaseService {
 
   Future<void> deleteProject(String id) async {
     await _db.collection('projects').doc(id).delete();
+  }
+
+  // New function to submit a project
+  Future<void> submitProject(Project project) async {
+    try {
+      await _db
+          .collection('projects')
+          .doc(project.projectId)
+          .set(project.toJson());
+      print("Project added successfully");
+    } catch (e) {
+      print("Failed to add project: $e");
+    }
   }
 
   // Pledge CRUD Operations
@@ -77,5 +100,39 @@ class DatabaseService {
 
   Future<void> deleteUpdate(String id) async {
     await _db.collection('updates').doc(id).delete();
+  }
+
+  // User CRUD Operations
+  Future<List<User>> fetchUsers() async {
+    var result = await _db.collection('users').get();
+    return result.docs
+        .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> addUser(User user) async {
+    await _db.collection('users').add(user.toJson());
+  }
+
+  Future<void> updateUser(String id, User user) async {
+    await _db.collection('users').doc(id).update(user.toJson());
+  }
+
+  Future<void> deleteUser(String id) async {
+    await _db.collection('users').doc(id).delete();
+  }
+
+  // Optionally, fetch a single user by ID
+  Future<User?> fetchUserById(String userId) async {
+    var doc = await _db.collection('users').doc(userId).get();
+    if (doc.exists) {
+      return User.fromJson(doc.data() as Map<String, dynamic>);
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>> getUserData(String uid) async {
+    DocumentSnapshot doc = await _db.collection('users').doc(uid).get();
+    return doc.data() as Map<String, dynamic>;
   }
 }

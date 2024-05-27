@@ -20,17 +20,16 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscureConfirmPassword = true;
 
   Future<void> createUserWithEmailAndPassword() async {
-    // Check if any of the fields are empty or if birthdate is not selected
     if (_emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _usernameController.text.isEmpty ||
         _phoneNumberController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty ||
         _birthdate == null) {
-      // Check if birthdate is null
       setState(() {
         errorMessage = 'Please fill all fields and select a birthdate';
       });
+      await _clearErrorMessage();
       return;
     }
 
@@ -38,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         errorMessage = 'Passwords do not match';
       });
+      await _clearErrorMessage();
       return;
     }
 
@@ -50,17 +50,30 @@ class _RegisterPageState extends State<RegisterPage> {
         phoneNumber: _phoneNumberController.text,
         birthdate: _birthdate,
       );
-      // Navigate to the appropriate page based on the role
-      if (_role == 'backer') {
-        Navigator.pushReplacementNamed(context, '/backerHomePage');
-      } else if (_role == 'creator') {
-        Navigator.pushReplacementNamed(context, '/creatorHomePage');
-      }
+      // Show success snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Registration successful! Logging you in...'),
+          duration: Duration(seconds: 5),
+        ),
+      );
+      // Wait for 3 seconds
+      await Future.delayed(Duration(seconds: 3));
+      // Navigate to login page
+      Navigator.of(context).pushReplacementNamed('/home');
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? 'An error occurred';
       });
+      await _clearErrorMessage();
     }
+  }
+
+  Future<void> _clearErrorMessage() async {
+    await Future.delayed(Duration(seconds: 5));
+    setState(() {
+      errorMessage = '';
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {

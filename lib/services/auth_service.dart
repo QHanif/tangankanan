@@ -32,7 +32,7 @@ class Auth {
     User? user = userCredential.user;
     if (user != null) {
       // Add additional user details to Firestore
-      await _firestore.collection('Users').doc(user.uid).set({
+      await _firestore.collection('users').doc(user.uid).set({
         'username': username,
         'email': email,
         'phoneNumber': phoneNumber,
