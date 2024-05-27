@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tangankanan/views/style.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -16,18 +17,42 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       appBar: AppBar(
         title: Text('Forgot Password'),
       ),
+      backgroundColor: AppColors.background,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                hintText: 'Enter your email',
+            Text(
+              'Please enter your email address to receive a password reset link.',
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 16.0,
               ),
-              keyboardType: TextInputType.emailAddress,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 8.0),
+              child: TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  labelStyle: TextStyle(color: Colors.black54),
+                  labelText: 'Email',
+                  hintText: 'Enter your email',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide(color: AppColors.textFieldBorder),
+                  ),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(

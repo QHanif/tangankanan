@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tangankanan/services/auth_service.dart';
+import 'package:tangankanan/views/style.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // Wait for 3 seconds
       await Future.delayed(Duration(seconds: 3));
       // Navigate to login page
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/');
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? 'An error occurred';
@@ -91,15 +92,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _birthdatePicker(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(_birthdate == null
-            ? 'No date chosen'
-            : 'Chosen Date: ${_birthdate!.toIso8601String()}'),
-        TextButton(
+        Icon(Icons.calendar_today),
+        SizedBox(width: 10),
+        Text(
+          'Birthday: ${_birthdate == null ? 'No date chosen' : _birthdate!.toIso8601String().substring(0, 10)}',
+        ),
+        SizedBox(width: 10),
+        ElevatedButton.icon(
           onPressed: () {
             _selectDate(context);
           },
-          child: Text('Choose Date'),
+          icon: Icon(Icons.date_range),
+          label: Text('Choose Date'),
         ),
       ],
     );
@@ -109,18 +115,32 @@ class _RegisterPageState extends State<RegisterPage> {
       {bool isPassword = false,
       required bool obscureText,
       required VoidCallback toggleVisibility}) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: title,
-        suffixIcon: isPassword
-            ? IconButton(
-                icon:
-                    Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-                onPressed: toggleVisibility,
-              )
-            : null,
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
+          labelStyle: TextStyle(color: Colors.black54),
+          labelText: title,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide(color: AppColors.textFieldBorder),
+          ),
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility),
+                  onPressed: toggleVisibility,
+                )
+              : null,
+        ),
       ),
     );
   }
@@ -157,53 +177,69 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _errorMessage() {
-    return Text(errorMessage);
+    return Text(
+      errorMessage == '' ? '' : 'Error: $errorMessage',
+      style: TextStyle(color: Colors.red),
+    );
   }
 
   Widget _submitButton() {
-    return ElevatedButton(
-      onPressed: createUserWithEmailAndPassword,
-      child: Text('Register'),
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: createUserWithEmailAndPassword,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryButton,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+        ),
+        child: Text(
+          'Register',
+          style: TextStyle(fontSize: 16.0, color: Colors.white),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text('Register'),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              _entryField('Username', _usernameController,
-                  obscureText: false, toggleVisibility: () {}),
-              _entryField('Email', _emailController,
-                  obscureText: false, toggleVisibility: () {}),
-              _entryField('Phone Number', _phoneNumberController,
-                  obscureText: false, toggleVisibility: () {}),
-              _entryField('Password', _passwordController,
-                  isPassword: true,
-                  obscureText: _obscurePassword, toggleVisibility: () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
-              }),
-              _entryField('Confirm Password', _confirmPasswordController,
-                  isPassword: true,
-                  obscureText: _obscureConfirmPassword, toggleVisibility: () {
-                setState(() {
-                  _obscureConfirmPassword = !_obscureConfirmPassword;
-                });
-              }),
-              _birthdatePicker(context),
-              _roleSelection(),
-              _errorMessage(),
-              _submitButton(),
-            ],
-          ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            _entryField('Username', _usernameController,
+                obscureText: false, toggleVisibility: () {}),
+            _entryField('Email', _emailController,
+                obscureText: false, toggleVisibility: () {}),
+            _entryField('Phone Number', _phoneNumberController,
+                obscureText: false, toggleVisibility: () {}),
+            _entryField('Password', _passwordController,
+                isPassword: true,
+                obscureText: _obscurePassword, toggleVisibility: () {
+              setState(() {
+                _obscurePassword = !_obscurePassword;
+              });
+            }),
+            _entryField('Confirm Password', _confirmPasswordController,
+                isPassword: true,
+                obscureText: _obscureConfirmPassword, toggleVisibility: () {
+              setState(() {
+                _obscureConfirmPassword = !_obscureConfirmPassword;
+              });
+            }),
+            _birthdatePicker(context),
+            _roleSelection(),
+            _errorMessage(),
+            _submitButton(),
+          ],
         ),
       ),
     );

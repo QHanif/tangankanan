@@ -86,11 +86,26 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
 
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/tangankanan_app_icon.png"
+
+flutter:
+  assets:
+    - assets/icon/
+    # - assets/images/
+    # - assets/fonts/
+    # - assets/sounds/
+    # - assets/videos/
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
+# flutter:
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
