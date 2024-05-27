@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tangankanan/models/project.dart';
 import 'package:tangankanan/services/auth_service.dart';
 import 'package:tangankanan/services/database_service.dart';
+import 'package:tangankanan/views/style.dart';
 
 class CreatorProjectPage extends StatefulWidget {
   const CreatorProjectPage({Key? key}) : super(key: key);
@@ -41,9 +42,25 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
     }
   }
 
+  Future<void> _refreshProjects() async {
+    await _loadUserProjects();
+    _loadUserProfilePicture();
+  }
+
+  Widget _text(argument) {
+    return Text(
+      argument,
+      style: TextStyle(
+        color: AppColors.primaryButton,
+        fontWeight: FontWeight.w400,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         leading: IconButton(
           icon: _profilePictureUrl != null
@@ -55,7 +72,7 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
             Navigator.pushNamed(context, '/profile');
           },
         ),
-        title: Text('Your Projects'),
+        title: Text('Your Project'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -73,107 +90,131 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: _projects.length,
-          itemBuilder: (context, index) {
-            final project = _projects[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 5,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Image.network(
-                        project.projectPicUrl,
-                        height: 150,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      project.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      project.description,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    LinearProgressIndicator(
-                      value: project.currentFund / project.fundGoal,
-                      backgroundColor: Colors.grey[300],
-                      color: Colors.blue,
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(2)}% funded',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '${project.backers.length} backers',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      '${project.endDate.difference(DateTime.now()).inDays} days remaining',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/creator_project_details_page',
-                          arguments: project,
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      child: Text('See Details'),
-                    ),
-                  ],
+      body: RefreshIndicator(
+        onRefresh: _refreshProjects,
+        child: Padding(
+          padding: const EdgeInsets.only(
+              left: 16.0, top: 16.0, right: 16.0, bottom: 100.0),
+          child: ListView.builder(
+            itemCount: _projects.length,
+            itemBuilder: (context, index) {
+              final project = _projects[index];
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-              ),
-            );
-          },
+                elevation: 5,
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    gradient: LinearGradient(
+                      colors: [Color.fromARGB(0, 179, 181, 255), Colors.white],
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.network(
+                            project.projectPicUrl,
+                            height: 150,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          project.title,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          project.description,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        LinearProgressIndicator(
+                          value: project.currentFund / project.fundGoal,
+                          backgroundColor: Colors.grey[300],
+                          color: AppColors.primaryButton,
+                        ),
+                        SizedBox(height: 5),
+                        _text(
+                            '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(2)}% funded'),
+                        SizedBox(height: 5),
+                        _text('${project.backers.length} backers'),
+                        SizedBox(height: 5),
+                        _text(
+                            '${project.endDate.difference(DateTime.now()).inDays} days remaining'),
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/creatorProjectDetails',
+                                arguments: project,
+                              );
+                            },
+                            style: AppStyles.primaryButtonStyle.copyWith(
+                              padding: MaterialStateProperty.all(
+                                  EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 10.0)),
+                            ),
+                            child: Text(
+                              'See details',
+                              style: TextStyle(
+                                  fontSize: 12.0, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/createProject').then((_) {
-            _loadUserProjects(); // Reload projects when returning from create project page
-          });
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Create New Project',
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/createProject').then((_) {
+                _loadUserProjects(); // Reload projects when returning from create project page
+              });
+            },
+            style: AppStyles.primaryButtonStyle,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: Colors.white),
+                SizedBox(width: 8.0),
+                Text(
+                  'Create new project',
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

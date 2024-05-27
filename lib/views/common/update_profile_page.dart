@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:tangankanan/services/database_service.dart';
 import 'package:tangankanan/models/user.dart' as AppUser;
+import 'package:tangankanan/views/style.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   @override
@@ -87,9 +88,38 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     }
   }
 
+  Widget _buildTextField(
+      String labelText, String? initialValue, FormFieldSetter<String> onSaved) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        initialValue: initialValue,
+        decoration: InputDecoration(
+          labelText: labelText,
+          fillColor: Colors.white,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30.0),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $labelText';
+          }
+          return null;
+        },
+        onSaved: onSaved,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text('Update Profile'),
       ),
@@ -103,43 +133,43 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 onTap: _pickImage,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: _profileImage != null
-                      ? FileImage(_profileImage!)
-                      : NetworkImage(_profileImageUrl ??
-                          'https://via.placeholder.com/150') as ImageProvider,
+                  backgroundColor: Colors.grey[200],
+                  child: _profileImage != null
+                      ? ClipOval(
+                          child: Image.file(
+                            _profileImage!,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : _profileImageUrl != null
+                          ? ClipOval(
+                              child: Image.network(
+                                _profileImageUrl!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.camera_alt,
+                                    size: 40, color: Colors.grey),
+                                Text('Upload a profile picture',
+                                    style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
                 ),
               ),
-              TextFormField(
-                initialValue: _username,
-                decoration: InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _username = value;
-                },
-              ),
-              TextFormField(
-                initialValue: _phoneNumber,
-                decoration: InputDecoration(labelText: 'Phone Number'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a phone number';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _phoneNumber = value;
-                },
-              ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: Text('Save Changes'),
-              ),
+              _buildTextField(
+                  'Username', _username, (value) => _username = value),
+              _buildTextField('Phone Number', _phoneNumber,
+                  (value) => _phoneNumber = value),
+              SizedBox(height: 20),
+              AppStyles.button('Save Changes', _updateProfile),
             ],
           ),
         ),

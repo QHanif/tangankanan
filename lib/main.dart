@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:tangankanan/app_root.dart';
 import 'utils/routes.dart'; // Make sure the path matches the location of your routes file
 
 Future<void> main() async {
@@ -20,9 +19,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const AppRoot(), // whether use home or initialRoute. dont use both
       initialRoute: '/',
       routes: routes, // Use the routes defined in routes.dart
+      onGenerateRoute:
+          generateRoute, // Use the generateRoute function for dynamic routes
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Project {
   final String projectId;
   final String creatorId;
@@ -63,5 +65,28 @@ class Project {
       'updates': updates,
       'projectStatus': projectStatus,
     };
+  }
+
+  factory Project.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Project(
+      projectId: doc.id,
+      creatorId: data['creatorId'],
+      title: data['title'],
+      description: data['description'],
+      projectPicUrl: data['projectPicUrl'],
+      fundGoal: data['fundGoal'].toDouble(),
+      currentFund: data['currentFund'].toDouble(),
+      startDate: data['startDate'] is Timestamp
+          ? (data['startDate'] as Timestamp).toDate()
+          : DateTime.parse(data['startDate']),
+      endDate: data['endDate'] is Timestamp
+          ? (data['endDate'] as Timestamp).toDate()
+          : DateTime.parse(data['endDate']),
+      verificationStatus: data['verificationStatus'],
+      backers: List<String>.from(data['backers']),
+      updates: List<String>.from(data['updates']),
+      projectStatus: data['projectStatus'],
+    );
   }
 }

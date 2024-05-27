@@ -13,3 +13,34 @@ class AppColors {
   static const Color secondaryButton =
       Color(0xFF1E88E5); // Example secondary button color
 }
+
+class AppStyles {
+  static ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: AppColors.primaryButton,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+    ),
+    padding: EdgeInsets.symmetric(vertical: 16.0),
+  );
+
+  static Widget button(String text, VoidCallback action) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: action,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primaryButton,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          padding: EdgeInsets.symmetric(vertical: 16.0),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}

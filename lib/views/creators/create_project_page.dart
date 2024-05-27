@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tangankanan/models/project.dart';
-import 'package:tangankanan/services/database_service.dart';
+// import 'package:tangankanan/services/database_service.dart';
 import 'package:tangankanan/services/auth_service.dart'; // Import your AuthService to get the current user ID
+import 'package:tangankanan/views/style.dart'; // Import the style file
 
 class CreateProjectPage extends StatefulWidget {
   @override
@@ -32,11 +33,10 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
     });
   }
 
-  Future<String?> _uploadImage(XFile imageFile) async {
+  Future<String?> _uploadImage(XFile imageFile, String projectId) async {
     try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('project_images/${imageFile.name}');
+      final storageRef =
+          FirebaseStorage.instance.ref().child('project_images/$projectId');
       final uploadTask = storageRef.putFile(File(imageFile.path));
       final snapshot = await uploadTask.whenComplete(() => {});
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -53,7 +53,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
       child: Container(
         height: 150,
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: _imageFile != null
@@ -84,8 +84,18 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   }) {
     return TextFormField(
       decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        labelStyle: TextStyle(color: Colors.black54),
         labelText: labelText,
-        border: OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: AppColors.textFieldBorder),
+        ),
       ),
       onSaved: onSaved,
       validator: validator,
@@ -101,8 +111,18 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   }) {
     return TextFormField(
       decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        labelStyle: TextStyle(color: Colors.black54),
         labelText: labelText,
-        border: OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(color: AppColors.textFieldBorder),
+        ),
       ),
       readOnly: true,
       onTap: () async {
@@ -129,6 +149,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text('Create new project'),
       ),
@@ -188,8 +209,12 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
+                  style: AppStyles.primaryButtonStyle,
                   onPressed: _submitForm,
-                  child: Text('Submit Project'),
+                  child: Text(
+                    'Submit Project',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -210,20 +235,17 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
         return;
       }
 
-      // Upload the image if one is selected
-      if (_imageFile != null) {
-        _projectPicUrl = await _uploadImage(_imageFile!);
-      }
-
       // Generate a new document reference to get the document ID
       final docRef = FirebaseFirestore.instance.collection('projects').doc();
 
+      // Create a new project object with the generated document ID
       final newProject = Project(
         projectId: docRef.id, // Use the generated document ID
         creatorId: userId, // Use the current user ID
         title: _title!,
         description: _description!,
-        projectPicUrl: _projectPicUrl ?? '',
+        projectPicUrl:
+            '', // Temporary empty URL, will be updated after image upload
         fundGoal: _fundGoal!,
         currentFund: 0.0,
         startDate: _startDate ?? DateTime.now(),
@@ -234,7 +256,23 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
         projectStatus: 'ongoing', // Set the default project status to 'ongoing'
       );
 
-      await DatabaseService().submitProject(newProject);
+      // Save the project to Firestore to get the document ID
+      await docRef.set(newProject.toJson());
+
+      // Upload the image if one is selected
+      if (_imageFile != null) {
+        _projectPicUrl = await _uploadImage(_imageFile!, docRef.id);
+      }
+
+      // Update the project with the image URL
+      await docRef.update({'projectPicUrl': _projectPicUrl});
+
+      // Add the project ID to the user's createdProjects array
+      final userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      await userDocRef.update({
+        'createdProjects': FieldValue.arrayUnion([docRef.id])
+      });
 
       Navigator.pop(context);
     }
