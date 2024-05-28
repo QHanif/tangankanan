@@ -103,9 +103,19 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            await DatabaseService()
-                                                .deleteProject(
-                                                    project.projectId);
+                                            try {
+                                              await DatabaseService()
+                                                  .deleteProject(
+                                                      project.projectId);
+                                              await DatabaseService()
+                                                  .deleteProjectImage(
+                                                      project.projectId);
+                                              print(
+                                                  'Project and image deleted successfully');
+                                            } catch (e) {
+                                              print(
+                                                  'Error deleting project or image: $e');
+                                            }
                                             Navigator.of(context)
                                                 .pop(); // Dismiss alert dialog
                                             _fetchPendingProjects(); // Refresh the list

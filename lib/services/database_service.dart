@@ -4,9 +4,11 @@ import '../models/pledge.dart';
 import '../models/fund_history.dart';
 import '../models/update.dart';
 import '../models/user.dart'; // Make sure to import the User model
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // Project CRUD Operations
 
@@ -32,7 +34,40 @@ class DatabaseService {
   }
 
   Future<void> deleteProject(String id) async {
-    await _db.collection('projects').doc(id).delete();
+    try {
+      // Fetch the project to get the creatorId
+      DocumentSnapshot projectDoc =
+          await _db.collection('projects').doc(id).get();
+      if (projectDoc.exists) {
+        String creatorId = projectDoc['creatorId'];
+
+        // Delete the project document
+        await _db.collection('projects').doc(id).delete();
+
+        // Delete the project image
+        await deleteProjectImage(id);
+
+        // Remove the projectId from the creator's createdProjects array
+        await _db.collection('users').doc(creatorId).update({
+          'createdProjects': FieldValue.arrayRemove([id])
+        });
+
+        print('Project and image deleted successfully');
+      } else {
+        print('Project not found');
+      }
+    } catch (e) {
+      print('Error deleting project or image: $e');
+    }
+  }
+
+  Future<void> deleteProjectImage(String projectId) async {
+    try {
+      await _storage.ref('project_images/$projectId').delete();
+      print('Project image deleted successfully');
+    } catch (e) {
+      print('Error deleting project image: $e');
+    }
   }
 
   // New function to submit a project
@@ -105,9 +140,10 @@ class DatabaseService {
   // User CRUD Operations
   Future<List<User>> fetchUsers() async {
     var result = await _db.collection('users').get();
-    return result.docs
-        .map((doc) => User.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+    return result.docs.map((doc) {
+      var user = User.fromJson(doc.data() as Map<String, dynamic>);
+      return user.copyWith(userId: doc.id); // Set userId to document ID
+    }).toList();
   }
 
   Future<void> addUser(User user) async {
@@ -118,8 +154,24 @@ class DatabaseService {
     await _db.collection('users').doc(id).update(user.toJson());
   }
 
-  Future<void> deleteUser(String id) async {
-    await _db.collection('users').doc(id).delete();
+  Future<void> deleteUser(String userId) async {
+    if (userId.isEmpty) {
+      throw ArgumentError('User ID cannot be empty');
+    }
+    await _db.collection('users').doc(userId).delete();
+    await deleteUserProfileImage(userId);
+  }
+
+  Future<void> deleteUserProfileImage(String userId) async {
+    if (userId.isEmpty) {
+      throw ArgumentError('User ID cannot be empty');
+    }
+    try {
+      await _storage.ref('profile_pics/$userId').delete();
+      print('User profile picture deleted successfully');
+    } catch (e) {
+      print('Error deleting user profile picture: $e');
+    }
   }
 
   // Optionally, fetch a single user by ID

@@ -68,8 +68,10 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                   backgroundImage: NetworkImage(_profilePictureUrl!),
                 )
               : Icon(Icons.account_circle),
-          onPressed: () {
-            Navigator.pushNamed(context, '/profile');
+          onPressed: () async {
+            await Navigator.pushNamed(context, '/profile').then((_) {
+              _loadUserProfilePicture(); // Refresh profile picture when returning from profile page
+            });
           },
         ),
         title: Text('Your Project'),

@@ -4,8 +4,27 @@ import 'package:tangankanan/services/auth_service.dart';
 import 'package:tangankanan/models/user.dart';
 import 'package:tangankanan/views/style.dart';
 
-class ManageUsersPage extends StatelessWidget {
+class ManageUsersPage extends StatefulWidget {
   const ManageUsersPage({Key? key}) : super(key: key);
+
+  @override
+  _ManageUsersPageState createState() => _ManageUsersPageState();
+}
+
+class _ManageUsersPageState extends State<ManageUsersPage> {
+  late Future<List<User>> _usersFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _usersFuture = DatabaseService().fetchUsers();
+  }
+
+  Future<void> _refreshUsers() async {
+    setState(() {
+      _usersFuture = DatabaseService().fetchUsers();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +34,7 @@ class ManageUsersPage extends StatelessWidget {
         title: Text('Manage Users'),
       ),
       body: FutureBuilder<List<User>>(
-        future: DatabaseService().fetchUsers(),
+        future: _usersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -84,10 +103,25 @@ class ManageUsersPage extends StatelessWidget {
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            await Auth()
-                                                .deleteUser(user.userId);
-                                            await DatabaseService()
-                                                .deleteUser(user.userId);
+                                            try {
+                                              if (user.userId.isNotEmpty) {
+                                                await Auth()
+                                                    .deleteUser(user.userId);
+                                                await DatabaseService()
+                                                    .deleteUser(user.userId);
+                                                await DatabaseService()
+                                                    .deleteUserProfileImage(
+                                                        user.userId);
+                                                print(
+                                                    'User and profile picture deleted successfully');
+                                                await _refreshUsers(); // Refresh the user list
+                                              } else {
+                                                print('User ID is empty');
+                                              }
+                                            } catch (e) {
+                                              print(
+                                                  'Error deleting user or profile picture: $e');
+                                            }
                                             Navigator.of(context)
                                                 .pop(); // Dismiss alert dialog
                                           },
