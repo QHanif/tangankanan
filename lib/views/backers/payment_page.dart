@@ -20,6 +20,7 @@ class _PaymentPageState extends State<PaymentPage> {
   final _auth = FirebaseAuth.instance;
 
   bool _isProcessing = false;
+  // ignore: unused_field
   bool _isPaymentSuccessful = false; // Added payment success flag
   String? _selectedBank;
 

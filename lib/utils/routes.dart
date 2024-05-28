@@ -9,11 +9,12 @@ import 'package:tangankanan/views/backers/project_catalog_page.dart';
 import 'package:tangankanan/views/backers/project_details_page.dart';
 import 'package:tangankanan/views/backers/payment_page.dart';
 import 'package:tangankanan/views/backers/project_top_backer_page.dart';
-import 'package:tangankanan/views/backers/project_updates_page.dart'; // Import the new page
+import 'package:tangankanan/views/backers/project_updates_page.dart';
 import 'package:tangankanan/views/creators/creator_project_details_page.dart';
 import 'package:tangankanan/views/creators/creator_project_page.dart';
 import 'package:tangankanan/views/creators/create_project_page.dart';
 import 'package:tangankanan/views/creators/community_updates_page.dart';
+import 'package:tangankanan/views/creators/funding_progress_page.dart'; // Import the new page
 import 'package:tangankanan/views/admin/admin_homepage.dart';
 import 'package:tangankanan/app_root.dart';
 import 'package:tangankanan/models/project.dart';
@@ -59,6 +60,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final project = settings.arguments as Project;
       return MaterialPageRoute(
           builder: (context) => ProjectUpdatesPage(project: project));
+    case '/fundingProgress':
+      final project = settings.arguments as Project;
+      return MaterialPageRoute(
+          builder: (context) => FundingProgressPage(project: project));
     default:
       return MaterialPageRoute(builder: (context) => AppRoot());
   }
