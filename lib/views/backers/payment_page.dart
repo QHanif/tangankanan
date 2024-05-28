@@ -20,8 +20,8 @@ class _PaymentPageState extends State<PaymentPage> {
   final _auth = FirebaseAuth.instance;
 
   bool _isProcessing = false;
+  bool _isPaymentSuccessful = false; // Added payment success flag
   String? _selectedBank;
-  int _selectedPaymentMethodIndex = 0;
 
   final List<String> _paymentMethods = ['Online Banking', 'Debit/Credit Card'];
   final List<String> _banks = [
@@ -61,6 +61,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
         setState(() {
           _isProcessing = true;
+          _isPaymentSuccessful = false; // Reset payment success flag
         });
 
         try {
@@ -75,6 +76,18 @@ class _PaymentPageState extends State<PaymentPage> {
               user.uid, widget.project.projectId);
           await DatabaseService()
               .addBackerToProject(widget.project.projectId, user.uid);
+
+          setState(() {
+            _isPaymentSuccessful = true; // Set payment success flag
+          });
+
+          // Show success SnackBar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Payment Successful!'),
+              backgroundColor: Colors.green,
+            ),
+          );
 
           Navigator.pop(context);
         } catch (e) {
@@ -129,7 +142,7 @@ class _PaymentPageState extends State<PaymentPage> {
           },
           child: Card(
             color:
-                isSelected ? Color.fromARGB(255, 160, 212, 255) : Colors.white,
+                isSelected ? Color.fromARGB(255, 207, 232, 252) : Colors.white,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -206,11 +219,6 @@ class _PaymentPageState extends State<PaymentPage> {
                   Expanded(
                     child: PageView.builder(
                       itemCount: _paymentMethods.length,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _selectedPaymentMethodIndex = index;
-                        });
-                      },
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -245,10 +253,25 @@ class _PaymentPageState extends State<PaymentPage> {
                   SizedBox(height: 20),
                   AppStyles.button('Confirm', _processPayment),
                   SizedBox(height: 20),
-                  Text(
-                    'By hitting the button confirm, you agree with the terms and conditions',
+                  RichText(
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
+                    text: TextSpan(
+                      style: TextStyle(color: Colors.grey),
+                      children: [
+                        TextSpan(
+                            text:
+                                'By hitting the button confirm, you agree with the '),
+                        TextSpan(
+                          text: 'terms',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        TextSpan(text: ' and '),
+                        TextSpan(
+                          text: 'conditions',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

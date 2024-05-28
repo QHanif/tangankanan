@@ -66,11 +66,14 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildShareIcon(Icons.facebook, 'Facebook', context),
-                  _buildShareIcon(Icons.photo_camera, 'Instagram', context),
                   _buildShareIcon(
-                      Icons.alternate_email, 'X (Twitter)', context),
-                  _buildShareIcon(Icons.message, 'WhatsApp', context),
+                      'assets/share_icon/fb.png', 'Facebook', context),
+                  _buildShareIcon(
+                      'assets/share_icon/ig.png', 'Instagram', context),
+                  _buildShareIcon(
+                      'assets/share_icon/x.png', 'X (Twitter)', context),
+                  _buildShareIcon(
+                      'assets/share_icon/wa.png', 'WhatsApp', context),
                 ],
               ),
               SizedBox(height: 16),
@@ -87,15 +90,16 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
     );
   }
 
-  Widget _buildShareIcon(IconData icon, String label, BuildContext context) {
+  Widget _buildShareIcon(String assetPath, String label, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Share.share('Check out this project: ${widget.project.title}');
+        Share.share(
+            'Check out this project: ${widget.project.title} in Tangankanan App\n\n');
         Navigator.pop(context);
       },
       child: Column(
         children: [
-          Icon(icon, size: 40),
+          Image.asset(assetPath, height: 40, width: 40),
           SizedBox(height: 8),
           Text(label, style: TextStyle(fontSize: 12)),
         ],

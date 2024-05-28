@@ -99,6 +99,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/bank_icon/
+    - assets/share_icon/
     # - assets/images/
     # - assets/fonts/
     # - assets/sounds/
