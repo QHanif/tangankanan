@@ -158,28 +158,59 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                         _text(
                             '${project.endDate.difference(DateTime.now()).inDays} days remaining'),
                         SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/creatorProjectDetails',
-                                arguments: project,
-                              );
-                            },
-                            style: AppStyles.primaryButtonStyle.copyWith(
-                              padding: MaterialStateProperty.all(
-                                  EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 10.0)),
+                        Row(
+                          children: [
+                            Icon(
+                              project.verificationStatus == 'verified'
+                                  ? Icons.verified
+                                  : project.verificationStatus == 'rejected'
+                                      ? Icons.cancel
+                                      : Icons.error,
+                              color: project.verificationStatus == 'verified'
+                                  ? Colors.green
+                                  : project.verificationStatus == 'rejected'
+                                      ? Colors.red
+                                      : Colors.orange,
                             ),
-                            child: Text(
-                              'See details',
+                            SizedBox(width: 5),
+                            Text(
+                              project.verificationStatus == 'verified'
+                                  ? 'Verified'
+                                  : project.verificationStatus == 'rejected'
+                                      ? 'Rejected'
+                                      : 'Pending',
                               style: TextStyle(
-                                  fontSize: 12.0, color: Colors.white),
+                                color: project.verificationStatus == 'verified'
+                                    ? Colors.green
+                                    : project.verificationStatus == 'rejected'
+                                        ? Colors.red
+                                        : Colors.orange,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                            Spacer(),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/creatorProjectDetails',
+                                  arguments: project,
+                                );
+                              },
+                              style: AppStyles.primaryButtonStyle.copyWith(
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 10.0)),
+                              ),
+                              child: Text(
+                                'See details',
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
+                        SizedBox(height: 10),
                       ],
                     ),
                   ),

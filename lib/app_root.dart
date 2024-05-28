@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tangankanan/views/admin/admin_project_catalog_page.dart';
+import 'package:tangankanan/views/admin/admin_homepage.dart';
 import 'package:tangankanan/views/backers/project_catalog_page.dart';
 import 'package:tangankanan/views/common/login_page.dart';
 // import 'package:tangankanan/views/common/profile_page.dart';
@@ -35,7 +35,7 @@ class AppRoot extends StatelessWidget {
                       case 'backer':
                         return const ProjectCatalogPage();
                       case 'admin':
-                        return const AdminProjectCatalogPage();
+                        return const AdminHomePage();
                       default:
                         return const LoginPage(); // Default to login page if role is not recognized
                     }

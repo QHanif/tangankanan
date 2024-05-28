@@ -135,4 +135,17 @@ class DatabaseService {
     DocumentSnapshot doc = await _db.collection('users').doc(uid).get();
     return doc.data() as Map<String, dynamic>;
   }
+
+  Future<List<Project>> fetchPendingProjects() async {
+    var result = await _db.collection('projects').get();
+    return result.docs.map((doc) => Project.fromDocument(doc)).toList();
+  }
+
+  Future<void> updateProjectVerificationStatus(
+      String projectId, String status) async {
+    await _db
+        .collection('projects')
+        .doc(projectId)
+        .update({'verificationStatus': status});
+  }
 }

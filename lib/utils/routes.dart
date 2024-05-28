@@ -10,7 +10,7 @@ import 'package:tangankanan/views/creators/creator_project_details_page.dart';
 import 'package:tangankanan/views/creators/creator_project_page.dart';
 import 'package:tangankanan/views/creators/create_project_page.dart';
 import 'package:tangankanan/views/creators/community_updates_page.dart'; // Import the new page
-import 'package:tangankanan/views/admin/admin_project_catalog_page.dart';
+import 'package:tangankanan/views/admin/admin_homepage.dart';
 import 'package:tangankanan/app_root.dart';
 import 'package:tangankanan/models/project.dart';
 
@@ -25,7 +25,7 @@ final Map<String, WidgetBuilder> routes = {
   '/projectCatalog': (context) => ProjectCatalogPage(),
   '/creatorProjects': (context) => CreatorProjectPage(),
   '/createProject': (context) => CreateProjectPage(),
-  '/adminCatalog': (context) => AdminProjectCatalogPage(),
+  '/adminHomepage': (context) => AdminHomePage(),
 };
 
 // Optionally, if you need to handle dynamic routes

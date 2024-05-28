@@ -146,33 +146,39 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _roleSelection() {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Backer'),
-          leading: Radio<String>(
-            value: 'backer',
-            groupValue: _role,
-            onChanged: (String? value) {
-              setState(() {
-                _role = value!;
-              });
-            },
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            title: const Text('Backer'),
+            leading: Radio<String>(
+              value: 'backer',
+              groupValue: _role,
+              onChanged: (String? value) {
+                setState(() {
+                  _role = value!;
+                });
+              },
+            ),
           ),
-        ),
-        ListTile(
-          title: const Text('Creator'),
-          leading: Radio<String>(
-            value: 'creator',
-            groupValue: _role,
-            onChanged: (String? value) {
-              setState(() {
-                _role = value!;
-              });
-            },
+          ListTile(
+            title: const Text('Creator'),
+            leading: Radio<String>(
+              value: 'creator',
+              groupValue: _role,
+              onChanged: (String? value) {
+                setState(() {
+                  _role = value!;
+                });
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -221,6 +227,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: false, toggleVisibility: () {}),
             _entryField('Phone Number', _phoneNumberController,
                 obscureText: false, toggleVisibility: () {}),
+            SizedBox(height: 10),
+            _birthdatePicker(context),
+            SizedBox(height: 15),
+            _roleSelection(),
+            SizedBox(height: 10),
             _entryField('Password', _passwordController,
                 isPassword: true,
                 obscureText: _obscurePassword, toggleVisibility: () {
@@ -235,8 +246,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 _obscureConfirmPassword = !_obscureConfirmPassword;
               });
             }),
-            _birthdatePicker(context),
-            _roleSelection(),
             _errorMessage(),
             _submitButton(),
           ],

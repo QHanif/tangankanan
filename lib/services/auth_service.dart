@@ -48,6 +48,19 @@ class Auth {
     }
   }
 
+  Future<void> deleteUser(String userId) async {
+    try {
+      User? user = _firebaseAuth.currentUser;
+      if (user != null && user.uid == userId) {
+        await user.delete();
+      } else {
+        print('No user is currently signed in or user ID does not match.');
+      }
+    } catch (e) {
+      print('Error deleting user: $e');
+    }
+  }
+
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }

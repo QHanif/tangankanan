@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               Image.asset(
                 'assets/icon/tangankanan_app_icon.png',
-                height: 150,
+                height: 100,
               ),
               SizedBox(height: 20),
               RichText(
@@ -176,32 +176,32 @@ class _LoginPageState extends State<LoginPage> {
                     TextSpan(
                       text: 'T',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
                         color: Color(0xFF002FD8),
                       ),
                     ),
                     TextSpan(
                       text: 'angan',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
                         color: Color(0xFF001561),
                       ),
                     ),
                     TextSpan(
                       text: 'k',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
                         color: Color(0xFF002FD8),
                       ),
                     ),
                     TextSpan(
                       text: 'anan',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
                         color: Color(0xFF001561),
                       ),
                     ),
