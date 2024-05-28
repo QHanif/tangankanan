@@ -153,7 +153,7 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                         ),
                         SizedBox(height: 5),
                         _text(
-                            '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(2)}% funded'),
+                            '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(1)}% funded'),
                         SizedBox(height: 5),
                         _text('${project.backers.length} backers'),
                         SizedBox(height: 5),
