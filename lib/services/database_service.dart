@@ -200,4 +200,79 @@ class DatabaseService {
         .doc(projectId)
         .update({'verificationStatus': status});
   }
+
+  Future<List<Project>> fetchVerifiedProjects() async {
+    var result = await _db
+        .collection('projects')
+        .where('verificationStatus', isEqualTo: 'verified')
+        .get();
+    return result.docs.map((doc) => Project.fromMap(doc.data())).toList();
+  }
+
+  Future<void> updateProjectFund(String projectId, double amount) async {
+    final projectRef = _db.collection('projects').doc(projectId);
+    await _db.runTransaction((transaction) async {
+      final snapshot = await transaction.get(projectRef);
+      if (!snapshot.exists) {
+        throw Exception("Project does not exist!");
+      }
+      final newFund = snapshot['currentFund'] + amount;
+      transaction.update(projectRef, {'currentFund': newFund});
+    });
+  }
+
+  Future<void> createPledge(Pledge pledge) async {
+    try {
+      final pledgeData = pledge.toJson();
+      print('Pledge Data: $pledgeData');
+      await _db.collection('pledges').add(pledgeData);
+      print('Pledge created successfully');
+    } catch (e) {
+      print('Error creating pledge: $e');
+    }
+  }
+
+  Future<List<Pledge>> fetchPledgesByUserId(String userId) async {
+    var result = await _db
+        .collection('pledges')
+        .where('userId', isEqualTo: userId)
+        .get();
+    return result.docs.map((doc) => Pledge.fromMap(doc.data())).toList();
+  }
+
+  Future<void> addProjectToUserBackedProjects(
+      String userId, String projectId) async {
+    final userRef = _db.collection('users').doc(userId);
+    await userRef.update({
+      'backedProjects': FieldValue.arrayUnion([projectId])
+    });
+  }
+
+  Future<Project> fetchProjectById(String projectId) async {
+    var doc = await _db.collection('projects').doc(projectId).get();
+    return Project.fromDocument(doc);
+  }
+
+  Future<void> addBackerToProject(String projectId, String userId) async {
+    final projectRef = _db.collection('projects').doc(projectId);
+    await projectRef.update({
+      'backers': FieldValue.arrayUnion([userId])
+    });
+  }
+
+  Future<List<Pledge>> fetchPledgesByProjectId(String projectId) async {
+    var result = await _db
+        .collection('pledges')
+        .where('projectId', isEqualTo: projectId)
+        .get();
+    return result.docs.map((doc) => Pledge.fromMap(doc.data())).toList();
+  }
+
+  Future<List<Update>> fetchUpdatesByProjectId(String projectId) async {
+    var result = await _db
+        .collection('updates')
+        .where('projectId', isEqualTo: projectId)
+        .get();
+    return result.docs.map((doc) => Update.fromMap(doc.data())).toList();
+  }
 }

@@ -55,11 +55,11 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Registration successful! Logging you in...'),
-          duration: Duration(seconds: 5),
+          duration: Duration(seconds: 4),
         ),
       );
       // Wait for 3 seconds
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(Duration(seconds: 1));
       // Navigate to login page
       Navigator.of(context).pushReplacementNamed('/');
     } on FirebaseAuthException catch (e) {

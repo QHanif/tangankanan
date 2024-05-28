@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:tangankanan/models/pledge.dart';
+import 'package:tangankanan/models/project.dart';
 import 'package:tangankanan/services/auth_service.dart';
 import 'package:tangankanan/services/database_service.dart';
 import 'package:tangankanan/services/project_service.dart';
@@ -29,10 +31,41 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       if (user != null) {
         userData = await DatabaseService().getUserData(user!.uid);
-        if (userData != null && userData!['role'] == 'creator') {
-          double totalEarnings =
-              await UserService().calculateTotalEarnings(user!.uid);
-          userData!['total_earnings'] = totalEarnings;
+        if (userData != null) {
+          if (userData!['role'] == 'creator') {
+            double totalEarnings =
+                await UserService().calculateTotalEarnings(user!.uid);
+            userData!['total_earnings'] = totalEarnings;
+
+            // Fetch total projects created by the user
+            List<Project> createdProjects =
+                await DatabaseService().fetchProjectsByCreatorId(user!.uid);
+            userData!['total_projects_created'] = createdProjects.length;
+          } else if (userData!['role'] == 'backer') {
+            List<Pledge> pledges =
+                await DatabaseService().fetchPledgesByUserId(user!.uid);
+            double totalContribution =
+                pledges.fold(0, (sum, pledge) => sum + pledge.amount);
+            userData!['total_contribution'] = totalContribution;
+
+            Map<String, double> contributionsMap = {};
+            for (Pledge pledge in pledges) {
+              Project project =
+                  await DatabaseService().fetchProjectById(pledge.projectId);
+              if (contributionsMap.containsKey(project.title)) {
+                contributionsMap[project.title] =
+                    contributionsMap[project.title]! + pledge.amount;
+              } else {
+                contributionsMap[project.title] = pledge.amount;
+              }
+            }
+
+            List<MapEntry<String, double>> sortedContributions =
+                contributionsMap.entries.toList()
+                  ..sort((a, b) => b.value.compareTo(a.value));
+
+            userData!['recent_contributions'] = sortedContributions;
+          }
         }
         setState(() {});
       }
@@ -121,6 +154,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   DateFormat('dd-MM-yyyy').format(
                                       DateTime.parse(
                                           userData!['registerDate']))),
+                              _buildUserInfoRow(
+                                  'Date of Birth',
+                                  DateFormat('dd-MM-yyyy').format(
+                                      DateTime.parse(userData!['birthdate']))),
                               _buildUserInfoRow('Role', userData!['role']),
                               SizedBox(height: 10),
                             ],
@@ -139,18 +176,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           vertical: 4.0, horizontal: 10.0)),
                     ),
                   ),
-                  if (userData!['role'] == 'backer') ...[
-                    _buildInfoCard('Total Contribution',
-                        '\$${userData!['total_contribution'] ?? 0}'),
-                    _buildInfoCard('Total Projects Backed',
-                        '${userData!['backedProjects']?.length ?? 0}'),
-                    _buildInfoCard('Recent Contribution',
-                        '${userData!['recent_contribution'] ?? 'No recent contribution'}'),
-                  ] else if (userData!['role'] == 'creator') ...[
-                    _buildInfoCard('Total Fund Collected',
-                        'RM ${userData!['total_earnings'] ?? 0}'),
+                  if (userData!['role'] == 'creator') ...[
+                    _buildInfoCard('Total Funds Collected',
+                        'RM ${userData!['total_earnings']?.toStringAsFixed(2) ?? '0.00'}'),
                     _buildInfoCard('Total Projects Created',
-                        '${userData!['createdProjects']?.length ?? 0}'),
+                        '${userData!['total_projects_created'] ?? 0}'),
+                  ] else if (userData!['role'] == 'backer') ...[
+                    _buildInfoCard('Total Contribution',
+                        'RM ${userData!['total_contribution']?.toStringAsFixed(2) ?? '0.00'}'),
+                    _buildRecentContributions(userData!['recent_contributions']
+                        as List<MapEntry<String, double>>),
                   ],
                 ],
               ),
@@ -158,7 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildUserInfoRow(String title, String? value) {
+  Widget _buildUserInfoRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -168,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
             title,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          Text(value ?? 'N/A'),
+          Text(value),
         ],
       ),
     );
@@ -206,6 +241,49 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left,
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentContributions(
+      List<MapEntry<String, double>> contributions) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        elevation: 5,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Recent Contributions',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                ...contributions.map((entry) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(entry.key),
+                          Text('\RM ${entry.value.toStringAsFixed(2)}'),
+                        ],
+                      ),
+                    )),
               ],
             ),
           ),

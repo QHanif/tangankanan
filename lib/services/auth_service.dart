@@ -33,6 +33,7 @@ class Auth {
     if (user != null) {
       // Add additional user details to Firestore
       await _firestore.collection('users').doc(user.uid).set({
+        'userId': user.uid,
         'username': username,
         'email': email,
         'phoneNumber': phoneNumber,

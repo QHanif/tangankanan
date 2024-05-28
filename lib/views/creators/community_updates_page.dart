@@ -18,6 +18,7 @@ class CommunityUpdatesPage extends StatefulWidget {
 }
 
 class _CommunityUpdatesPageState extends State<CommunityUpdatesPage> {
+  final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   File? _image;
@@ -33,6 +34,11 @@ class _CommunityUpdatesPageState extends State<CommunityUpdatesPage> {
   }
 
   Future<void> _postUpdate() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState!.save();
+
     if (_titleController.text.isEmpty || _descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Title and description cannot be empty')),
@@ -114,59 +120,68 @@ class _CommunityUpdatesPageState extends State<CommunityUpdatesPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: GestureDetector(
-                onTap: _pickImage,
-                child: _image == null
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: _pickImage,
+                  child: _image == null
+                      ? Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          height: 200,
+                          width: double.infinity,
+                          child: Icon(Icons.add_a_photo,
+                              size: 50, color: Colors.grey[700]),
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          height: 200,
+                          width: double.infinity,
+                          child: Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        height: 200,
-                        width: double.infinity,
-                        child: Icon(Icons.add_a_photo,
-                            size: 50, color: Colors.grey[700]),
-                      )
-                    : Image.file(
-                        _image!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            _buildTextFormField(
-              labelText: 'Update Title',
-              onSaved: (value) => _titleController.text = value ?? '',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Title cannot be empty';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 10),
-            _buildTextFormField(
-              labelText: 'Update Description',
-              onSaved: (value) => _descriptionController.text = value ?? '',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Description cannot be empty';
-                }
-                return null;
-              },
-              maxLines: 5,
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: AppStyles.button('Post Update', _postUpdate),
-            ),
-          ],
+              SizedBox(height: 10),
+              _buildTextFormField(
+                labelText: 'Update Title',
+                onSaved: (value) => _titleController.text = value ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Title cannot be empty';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              _buildTextFormField(
+                labelText: 'Update Description',
+                onSaved: (value) => _descriptionController.text = value ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Description cannot be empty';
+                  }
+                  return null;
+                },
+                maxLines: 5,
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: AppStyles.button('Post Update', _postUpdate),
+              ),
+            ],
+          ),
         ),
       ),
     );
