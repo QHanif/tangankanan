@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/project.dart';
 import '../models/pledge.dart';
-import '../models/fund_history.dart';
 import '../models/update.dart';
 import '../models/user.dart'; // Make sure to import the User model
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +10,6 @@ class DatabaseService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // Project CRUD Operations
-
   Future<List<Project>> fetchProjectsByCreatorId(String creatorId) async {
     var result = await _db
         .collection('projects')
@@ -99,24 +97,6 @@ class DatabaseService {
 
   Future<void> deletePledge(String id) async {
     await _db.collection('pledges').doc(id).delete();
-  }
-
-  // FundHistory CRUD Operations
-  Future<List<FundHistory>> fetchFundHistories() async {
-    var result = await _db.collection('fund_histories').get();
-    return result.docs.map((doc) => FundHistory.fromMap(doc.data())).toList();
-  }
-
-  Future<void> addFundHistory(FundHistory fundHistory) async {
-    await _db.collection('fund_histories').add(fundHistory.toJson());
-  }
-
-  Future<void> updateFundHistory(String id, FundHistory fundHistory) async {
-    await _db.collection('fund_histories').doc(id).update(fundHistory.toJson());
-  }
-
-  Future<void> deleteFundHistory(String id) async {
-    await _db.collection('fund_histories').doc(id).delete();
   }
 
   // Update CRUD Operations
