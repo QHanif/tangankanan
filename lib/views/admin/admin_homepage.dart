@@ -54,13 +54,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Center(
+            Center(
               child: Column(
                 children: [
-                  Icon(
-                    Icons.admin_panel_settings,
-                    size: 100,
-                    color: Colors.blue,
+                  Image.asset(
+                    'assets/icon/tangankanan_app_icon.png',
+                    width: 100,
+                    height: 100,
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -77,8 +77,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
             SizedBox(height: 40),
             _buildCard(
               context,
-              'Project Application Approval',
-              Icons.assignment_turned_in,
+              'Manage Projects',
+              Icons.admin_panel_settings,
               ManageProjectsPage(),
               _pendingApprovalCount,
             ),

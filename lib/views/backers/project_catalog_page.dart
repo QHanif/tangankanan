@@ -129,6 +129,37 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
                             fontSize: 18,
                           ),
                         ),
+                        FutureBuilder<String>(
+                          future: DatabaseService()
+                              .fetchCreatorName(project.creatorId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  children: [
+                                    TextSpan(text: 'Created by '),
+                                    TextSpan(
+                                      text: snapshot.data,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
                         SizedBox(height: 5),
                         Text(
                           project.description,
@@ -148,18 +179,38 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
                         SizedBox(height: 5),
                         _text('${project.backers.length} backers'),
                         SizedBox(height: 5),
-                        _text(
-                            '${project.endDate.difference(DateTime.now()).inDays} days remaining'),
+                        _text(() {
+                          final duration =
+                              project.endDate.difference(DateTime.now());
+                          if (duration.inDays >= 2) {
+                            return '${duration.inDays} days to go';
+                          } else {
+                            return '${duration.inHours} hours to go';
+                          }
+                        }()),
                         SizedBox(height: 10),
                         Row(
                           children: [
-                            Text(
-                              'Status: ${project.projectStatus}',
-                              style: TextStyle(
-                                color: project.projectStatus == 'ongoing'
-                                    ? Colors.green
-                                    : Colors.blue,
-                                fontWeight: FontWeight.bold,
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: project.projectStatus == 'ongoing'
+                                      ? Colors.green
+                                      : Colors.blue,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Text(
+                                '${project.projectStatus.toUpperCase()}',
+                                style: TextStyle(
+                                  color: project.projectStatus == 'ongoing'
+                                      ? Colors.green
+                                      : Colors.blue,
+                                  fontWeight: FontWeight.normal,
+                                ),
                               ),
                             ),
                             Spacer(),

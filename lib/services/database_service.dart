@@ -50,12 +50,37 @@ class DatabaseService {
           'createdProjects': FieldValue.arrayRemove([id])
         });
 
-        print('Project and image deleted successfully');
+        // Fetch and delete all pledges related to the project
+        var pledgesSnapshot = await _db
+            .collection('pledges')
+            .where('projectId', isEqualTo: id)
+            .get();
+        for (var pledgeDoc in pledgesSnapshot.docs) {
+          await _db.collection('pledges').doc(pledgeDoc.id).delete();
+
+          // Update the user's backedProjects array
+          String userId = pledgeDoc['userId'];
+          await _db.collection('users').doc(userId).update({
+            'backedProjects': FieldValue.arrayRemove([id])
+          });
+        }
+
+        // Fetch and delete all updates related to the project
+        var updatesSnapshot = await _db
+            .collection('updates')
+            .where('projectId', isEqualTo: id)
+            .get();
+        for (var updateDoc in updatesSnapshot.docs) {
+          await _db.collection('updates').doc(updateDoc.id).delete();
+        }
+
+        print(
+            'Project, image, related pledges, and updates deleted successfully');
       } else {
         print('Project not found');
       }
     } catch (e) {
-      print('Error deleting project or image: $e');
+      print('Error deleting project or related data: $e');
     }
   }
 
@@ -254,5 +279,10 @@ class DatabaseService {
         .where('projectId', isEqualTo: projectId)
         .get();
     return result.docs.map((doc) => Update.fromMap(doc.data())).toList();
+  }
+
+  Future<String> fetchCreatorName(String creatorId) async {
+    final doc = await _db.collection('users').doc(creatorId).get();
+    return doc['username'];
   }
 }

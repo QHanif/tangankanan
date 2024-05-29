@@ -158,7 +158,16 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                         _text('${project.backers.length} backers'),
                         SizedBox(height: 5),
                         _text(
-                            '${project.endDate.difference(DateTime.now()).inDays} days remaining'),
+                          () {
+                            final duration =
+                                project.endDate.difference(DateTime.now());
+                            if (duration.inDays >= 2) {
+                              return '${duration.inDays} days remaining';
+                            } else {
+                              return '${duration.inHours} hours remaining';
+                            }
+                          }(),
+                        ),
                         SizedBox(height: 10),
                         Row(
                           children: [

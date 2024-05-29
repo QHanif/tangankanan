@@ -55,7 +55,15 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.network(project.projectPicUrl),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            project.projectPicUrl,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         SizedBox(height: 10),
                         Text(
                           project.title,

@@ -67,7 +67,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
         try {
           // Simulate payment processing
-          await Future.delayed(Duration(seconds: 5));
+          await Future.delayed(Duration(seconds: 4));
 
           // On success, update the project currentFund and create a pledge
           await DatabaseService()
@@ -167,15 +167,47 @@ class _PaymentPageState extends State<PaymentPage> {
     return Column(
       children: [
         TextFormField(
-          decoration: InputDecoration(labelText: 'Card Number'),
+          decoration: InputDecoration(
+            labelText: 'First Name',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.person),
+          ),
+          keyboardType: TextInputType.name,
+        ),
+        SizedBox(height: 10),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Last Name',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.person_outline),
+          ),
+          keyboardType: TextInputType.name,
+        ),
+        SizedBox(height: 10),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Card Number',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.credit_card),
+          ),
           keyboardType: TextInputType.number,
         ),
+        SizedBox(height: 10),
         TextFormField(
-          decoration: InputDecoration(labelText: 'Expiry Date'),
+          decoration: InputDecoration(
+            labelText: 'Expiry Date',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.date_range),
+          ),
           keyboardType: TextInputType.datetime,
         ),
+        SizedBox(height: 10),
         TextFormField(
-          decoration: InputDecoration(labelText: 'CVV'),
+          decoration: InputDecoration(
+            labelText: 'CVV',
+            border: OutlineInputBorder(),
+            prefixIcon: Icon(Icons.lock),
+          ),
           keyboardType: TextInputType.number,
         ),
       ],
@@ -189,13 +221,16 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(
         title: Text('Support this project'),
       ),
+      resizeToAvoidBottomInset:
+          true, // This adjusts the layout when the keyboard appears
       body: Stack(
         children: [
-          Padding(
+          SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.project.title,
@@ -216,8 +251,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
-                  Expanded(
+                  SizedBox(height: 5),
+                  Container(
+                    height: 470, // Adjust height as needed
                     child: PageView.builder(
                       itemCount: _paymentMethods.length,
                       itemBuilder: (context, index) {

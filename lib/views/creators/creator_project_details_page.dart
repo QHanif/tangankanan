@@ -152,8 +152,18 @@ class _CreatorProjectDetailsPageState extends State<CreatorProjectDetailsPage> {
                                         '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(1)}%'),
                                     _buildInfoRow(
                                         'Backers', '${project.backers.length}'),
-                                    _buildInfoRow('Days Remaining',
-                                        '${project.endDate.difference(DateTime.now()).inDays} days'),
+                                    _buildInfoRow(
+                                      'Time Remaining',
+                                      () {
+                                        final duration = project.endDate
+                                            .difference(DateTime.now());
+                                        if (duration.inDays >= 2) {
+                                          return '${duration.inDays} days';
+                                        } else {
+                                          return '${duration.inHours} hours';
+                                        }
+                                      }(),
+                                    ),
                                   ],
                                 );
                               }
