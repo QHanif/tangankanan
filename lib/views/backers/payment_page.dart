@@ -163,53 +163,34 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
+  Widget _cardDetailTextfield(
+      String labelText, TextInputType keyboardType, IconData prefixIcon) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        prefixIcon: Icon(prefixIcon),
+      ),
+      keyboardType: keyboardType,
+    );
+  }
+
   Widget _buildCardForm() {
     return Column(
       children: [
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'First Name',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.person),
-          ),
-          keyboardType: TextInputType.name,
-        ),
+        _cardDetailTextfield('First Name', TextInputType.name, Icons.person),
         SizedBox(height: 10),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Last Name',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.person_outline),
-          ),
-          keyboardType: TextInputType.name,
-        ),
+        _cardDetailTextfield('Last Name', TextInputType.name, Icons.person),
         SizedBox(height: 10),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Card Number',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.credit_card),
-          ),
-          keyboardType: TextInputType.number,
-        ),
+        _cardDetailTextfield(
+            'Card Number', TextInputType.number, Icons.credit_card),
         SizedBox(height: 10),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Expiry Date',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.date_range),
-          ),
-          keyboardType: TextInputType.datetime,
-        ),
+        _cardDetailTextfield(
+            'Expiry Date', TextInputType.datetime, Icons.date_range),
         SizedBox(height: 10),
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'CVV',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.lock),
-          ),
-          keyboardType: TextInputType.number,
-        ),
+        _cardDetailTextfield('CVV', TextInputType.number, Icons.lock),
       ],
     );
   }
@@ -260,26 +241,29 @@ class _PaymentPageState extends State<PaymentPage> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _paymentMethods[index],
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Expanded(
-                                    child: index == 0
-                                        ? _buildBankGrid()
-                                        : SingleChildScrollView(
-                                            child: _buildCardForm(),
-                                          ),
-                                  ),
-                                ],
+                            child: Container(
+                              decoration: AppStyles().cardDecoration(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _paymentMethods[index],
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 20),
+                                    Expanded(
+                                      child: index == 0
+                                          ? _buildBankGrid()
+                                          : SingleChildScrollView(
+                                              child: _buildCardForm(),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

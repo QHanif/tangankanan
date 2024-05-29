@@ -55,10 +55,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _sendPasswordResetEmail,
-              child: Text('Send Password Reset Email'),
-            ),
+            AppStyles.button(
+                'Send Password Reset Email', _sendPasswordResetEmail),
           ],
         ),
       ),

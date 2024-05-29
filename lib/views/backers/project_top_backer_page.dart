@@ -76,12 +76,14 @@ class _ProjectTopBackerPageState extends State<ProjectTopBackerPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.project.title,
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 4, 60, 158)),
+                  Center(
+                    child: Text(
+                      widget.project.title,
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 0, 0, 0)),
+                    ),
                   ),
                   SizedBox(height: 16),
                   Row(
@@ -90,15 +92,15 @@ class _ProjectTopBackerPageState extends State<ProjectTopBackerPage> {
                       Text('RANK',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.orange)),
+                              color: AppColors.primaryButton)),
                       Text('BACKER',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.orange)),
+                              color: AppColors.primaryButton)),
                       Text('CONTRIBUTION',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.orange)),
+                              color: AppColors.primaryButton)),
                     ],
                   ),
                   Divider(
@@ -120,17 +122,7 @@ class _ProjectTopBackerPageState extends State<ProjectTopBackerPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color.fromARGB(0, 254, 255, 236),
-                                    Colors.white
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
+                              decoration: AppStyles().cardDecoration(),
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
                                 mainAxisAlignment:

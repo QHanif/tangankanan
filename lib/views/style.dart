@@ -76,12 +76,12 @@ class AppStyles {
   BoxDecoration cardDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(15.0),
-      color: Colors.white,
-      // gradient: LinearGradient(
-      //   colors: [Color.fromARGB(0, 168, 187, 255), Colors.white],
-      //   begin: Alignment.topCenter,
-      //   end: Alignment.bottomCenter,
-      // ),
+      // color: Colors.white,
+      gradient: LinearGradient(
+        colors: [Color(0xFFCBDAFF), Colors.white],
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+      ),
     );
   }
 }

@@ -50,6 +50,7 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
                 final project = projects[index];
                 return Card(
                   margin: EdgeInsets.all(10),
+                  elevation: 10,
                   child: Container(
                     decoration: AppStyles().cardDecoration(),
                     child: Padding(

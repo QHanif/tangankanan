@@ -103,7 +103,7 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
           padding: const EdgeInsets.only(
               left: 16.0, top: 16.0, right: 16.0, bottom: 100.0),
           child: _projects.isEmpty
-              ? Center(child: Text('No projects found.'))
+              ? Center(child: Text('No projects created yet.'))
               : ListView.builder(
                   itemCount: _projects.length,
                   itemBuilder: (context, index) {
@@ -118,10 +118,7 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
                           gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(0, 179, 181, 255),
-                              Colors.white
-                            ],
+                            colors: [Color(0xFFCBDAFF), Colors.white],
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
                           ),

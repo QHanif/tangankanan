@@ -23,6 +23,7 @@ class ProjectVerificationPage extends StatelessWidget {
             children: [
               Card(
                 margin: EdgeInsets.all(10),
+                elevation: 10,
                 child: Container(
                   decoration: AppStyles().cardDecoration(),
                   child: Padding(

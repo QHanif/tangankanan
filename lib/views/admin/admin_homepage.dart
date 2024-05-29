@@ -85,7 +85,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: AppColors.primaryButton,
                     ),
                   ),
                 ],
@@ -137,23 +137,26 @@ class _AdminHomePageState extends State<AdminHomePage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Icon(icon, size: 40, color: Colors.blue),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+            child: Container(
+              decoration: AppStyles().cardDecoration(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(icon, size: 40, color: Colors.blue),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, color: Colors.blue),
-                ],
+                    Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                  ],
+                ),
               ),
             ),
           ),
