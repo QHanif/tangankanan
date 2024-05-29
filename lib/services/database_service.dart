@@ -285,4 +285,11 @@ class DatabaseService {
     final doc = await _db.collection('users').doc(creatorId).get();
     return doc['username'];
   }
+
+  Future<void> updateProjectStatus(String projectId, String status) async {
+    await FirebaseFirestore.instance
+        .collection('projects')
+        .doc(projectId)
+        .update({'projectStatus': status});
+  }
 }

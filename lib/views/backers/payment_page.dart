@@ -253,7 +253,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   ),
                   SizedBox(height: 5),
                   Container(
-                    height: 470, // Adjust height as needed
+                    height: 525, // Adjust height as needed
                     child: PageView.builder(
                       itemCount: _paymentMethods.length,
                       itemBuilder: (context, index) {

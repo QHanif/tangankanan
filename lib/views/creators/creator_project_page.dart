@@ -39,12 +39,23 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
       setState(() {
         _projects = projects;
       });
+      await _checkAndUpdateProjectStatus();
     }
   }
 
   Future<void> _refreshProjects() async {
     await _loadUserProjects();
     _loadUserProfilePicture();
+  }
+
+  Future<void> _checkAndUpdateProjectStatus() async {
+    for (var project in _projects) {
+      if (project.endDate.isBefore(DateTime.now()) &&
+          project.projectStatus != 'completed') {
+        await DatabaseService()
+            .updateProjectStatus(project.projectId, 'completed');
+      }
+    }
   }
 
   Widget _text(argument) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tangankanan/models/project.dart';
 import 'package:tangankanan/services/auth_service.dart';
+import 'package:tangankanan/services/database_service.dart';
 import 'package:tangankanan/views/admin/manage_projects_page.dart';
 import 'package:tangankanan/views/admin/manage_users_page.dart';
 import 'package:tangankanan/views/admin/admin_create_project_page.dart';
@@ -20,6 +22,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   void initState() {
     super.initState();
     _fetchPendingApprovalCount();
+    _checkAndUpdateProjectStatus();
   }
 
   Future<void> _fetchPendingApprovalCount() async {
@@ -31,6 +34,20 @@ class _AdminHomePageState extends State<AdminHomePage> {
     setState(() {
       _pendingApprovalCount = querySnapshot.docs.length;
     });
+  }
+
+  Future<void> _checkAndUpdateProjectStatus() async {
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection('projects').get();
+
+    for (var doc in querySnapshot.docs) {
+      final project = Project.fromDocument(doc);
+      if (project.endDate.isBefore(DateTime.now()) &&
+          project.projectStatus != 'completed') {
+        await DatabaseService()
+            .updateProjectStatus(project.projectId, 'completed');
+      }
+    }
   }
 
   @override

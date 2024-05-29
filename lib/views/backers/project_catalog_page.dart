@@ -32,11 +32,22 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
     }
   }
 
+  Future<void> _checkAndUpdateProjectStatus() async {
+    for (var project in _projects) {
+      if (project.endDate.isBefore(DateTime.now()) &&
+          project.projectStatus != 'completed') {
+        await DatabaseService()
+            .updateProjectStatus(project.projectId, 'completed');
+      }
+    }
+  }
+
   Future<void> _loadVerifiedProjects() async {
     final projects = await DatabaseService().fetchVerifiedProjects();
     setState(() {
       _projects = projects;
     });
+    await _checkAndUpdateProjectStatus();
   }
 
   Future<void> _refreshProjects() async {
@@ -44,7 +55,7 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
     _loadUserProfilePicture();
   }
 
-  Widget _text(argument) {
+  Widget _text(String argument) {
     return Text(
       argument,
       style: TextStyle(
@@ -180,6 +191,9 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
                         _text('${project.backers.length} backers'),
                         SizedBox(height: 5),
                         _text(() {
+                          if (project.projectStatus == 'completed') {
+                            return '';
+                          }
                           final duration =
                               project.endDate.difference(DateTime.now());
                           if (duration.inDays >= 2) {
