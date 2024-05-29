@@ -280,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(entry.key),
-                          Text('\RM ${entry.value.toStringAsFixed(2)}'),
+                          Text('RM ${entry.value.toStringAsFixed(2)}'),
                         ],
                       ),
                     )),
