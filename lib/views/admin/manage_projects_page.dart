@@ -50,109 +50,113 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
                 final project = projects[index];
                 return Card(
                   margin: EdgeInsets.all(10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            project.projectPicUrl,
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          project.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(project.description),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Status: ${project.verificationStatus}',
-                              style: TextStyle(
-                                color: project.verificationStatus == 'verified'
-                                    ? Colors.green
-                                    : project.verificationStatus == 'rejected'
-                                        ? Colors.red
-                                        : Colors.orange,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  child: Container(
+                    decoration: AppStyles().cardDecoration(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              project.projectPicUrl,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
                             ),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              color: Colors.red,
-                              onPressed: () async {
-                                // Handle project deletion
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Delete Project'),
-                                      content: Text(
-                                          'Are you sure you want to delete this project?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Dismiss alert dialog
-                                          },
-                                          child: Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              await DatabaseService()
-                                                  .deleteProject(
-                                                      project.projectId);
-                                              await DatabaseService()
-                                                  .deleteProjectImage(
-                                                      project.projectId);
-                                              print(
-                                                  'Project and image deleted successfully');
-                                            } catch (e) {
-                                              print(
-                                                  'Error deleting project or image: $e');
-                                            }
-                                            Navigator.of(context)
-                                                .pop(); // Dismiss alert dialog
-                                            _fetchPendingProjects(); // Refresh the list
-                                          },
-                                          child: Text('Delete'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            project.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        AppStyles.button(
-                          'View Details',
-                          () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProjectVerificationPage(project: project),
+                          ),
+                          SizedBox(height: 5),
+                          Text(project.description),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Status: ${project.verificationStatus}',
+                                style: TextStyle(
+                                  color: project.verificationStatus ==
+                                          'verified'
+                                      ? Colors.green
+                                      : project.verificationStatus == 'rejected'
+                                          ? Colors.red
+                                          : Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            );
-                            _fetchPendingProjects(); // Refresh the list when coming back
-                          },
-                        ),
-                      ],
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                color: Colors.red,
+                                onPressed: () async {
+                                  // Handle project deletion
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Delete Project'),
+                                        content: Text(
+                                            'Are you sure you want to delete this project?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Dismiss alert dialog
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              try {
+                                                await DatabaseService()
+                                                    .deleteProject(
+                                                        project.projectId);
+                                                await DatabaseService()
+                                                    .deleteProjectImage(
+                                                        project.projectId);
+                                                print(
+                                                    'Project and image deleted successfully');
+                                              } catch (e) {
+                                                print(
+                                                    'Error deleting project or image: $e');
+                                              }
+                                              Navigator.of(context)
+                                                  .pop(); // Dismiss alert dialog
+                                              _fetchPendingProjects(); // Refresh the list
+                                            },
+                                            child: Text('Delete'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          AppStyles.button(
+                            'View Details',
+                            () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProjectVerificationPage(project: project),
+                                ),
+                              );
+                              _fetchPendingProjects(); // Refresh the list when coming back
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -23,144 +23,156 @@ class ProjectVerificationPage extends StatelessWidget {
             children: [
               Card(
                 margin: EdgeInsets.all(10),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.network(project.projectPicUrl),
-                      SizedBox(height: 10),
-                      Center(
-                        child: Text(
-                          project.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                child: Container(
+                  decoration: AppStyles().cardDecoration(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15.0),
+                          child: Image.network(
+                            project.projectPicUrl,
+                            height: 150,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        project.description,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Fund Goal:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue,
+                        SizedBox(height: 10),
+                        Center(
+                          child: Text(
+                            project.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          project.description,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Fund Goal:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '\$${project.fundGoal.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue,
+                            Expanded(
+                              child: Text(
+                                '\$${project.fundGoal.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Current Fund:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.green,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Current Fund:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '\$${project.currentFund.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.green,
+                            Expanded(
+                              child: Text(
+                                '\$${project.currentFund.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Start Date:',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '${project.startDate.toLocal().toString().split(' ')[0]}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'End Date:',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '${project.endDate.toLocal().toString().split(' ')[0]}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Verification Status:',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '${project.verificationStatus}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: project.verificationStatus == 'verified'
-                                    ? Colors.green
-                                    : project.verificationStatus == 'rejected'
-                                        ? Colors.red
-                                        : Colors.orange,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Start Date:',
+                                style: TextStyle(fontSize: 16),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Project Status:',
-                              style: TextStyle(fontSize: 16),
+                            Expanded(
+                              child: Text(
+                                '${project.startDate.toLocal().toString().split(' ')[0]}',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              '${project.projectStatus}',
-                              style: TextStyle(fontSize: 16),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'End Date:',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Expanded(
+                              child: Text(
+                                '${project.endDate.toLocal().toString().split(' ')[0]}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Verification Status:',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${project.verificationStatus}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: project.verificationStatus ==
+                                          'verified'
+                                      ? Colors.green
+                                      : project.verificationStatus == 'rejected'
+                                          ? Colors.red
+                                          : Colors.orange,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Project Status:',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                '${project.projectStatus}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

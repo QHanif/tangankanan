@@ -89,12 +89,6 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {
-              Navigator.pushNamed(context, '/notification_page');
-            },
-          ),
-          IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
               await Auth().signOut();
@@ -108,138 +102,153 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
         child: Padding(
           padding: const EdgeInsets.only(
               left: 16.0, top: 16.0, right: 16.0, bottom: 100.0),
-          child: ListView.builder(
-            itemCount: _projects.length,
-            itemBuilder: (context, index) {
-              final project = _projects[index];
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                elevation: 5,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    gradient: LinearGradient(
-                      colors: [Color.fromARGB(0, 179, 181, 255), Colors.white],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
+          child: _projects.isEmpty
+              ? Center(child: Text('No projects found.'))
+              : ListView.builder(
+                  itemCount: _projects.length,
+                  itemBuilder: (context, index) {
+                    final project = _projects[index];
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      elevation: 5,
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.network(
-                            project.projectPicUrl,
-                            height: 150,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(0, 179, 181, 255),
+                              Colors.white
+                            ],
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          project.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          project.description,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        LinearProgressIndicator(
-                          value: project.currentFund / project.fundGoal,
-                          backgroundColor: Colors.grey[300],
-                          color: AppColors.primaryButton,
-                        ),
-                        SizedBox(height: 5),
-                        _text(
-                            '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(1)}% funded'),
-                        SizedBox(height: 5),
-                        _text('${project.backers.length} backers'),
-                        SizedBox(height: 5),
-                        _text(
-                          () {
-                            final duration =
-                                project.endDate.difference(DateTime.now());
-                            if (duration.inDays >= 2) {
-                              return '${duration.inDays} days remaining';
-                            } else {
-                              return '${duration.inHours} hours remaining';
-                            }
-                          }(),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(
-                              project.verificationStatus == 'verified'
-                                  ? Icons.verified
-                                  : project.verificationStatus == 'rejected'
-                                      ? Icons.cancel
-                                      : Icons.error,
-                              color: project.verificationStatus == 'verified'
-                                  ? Colors.green
-                                  : project.verificationStatus == 'rejected'
-                                      ? Colors.red
-                                      : Colors.orange,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              project.verificationStatus == 'verified'
-                                  ? 'Verified'
-                                  : project.verificationStatus == 'rejected'
-                                      ? 'Rejected'
-                                      : 'Pending',
-                              style: TextStyle(
-                                color: project.verificationStatus == 'verified'
-                                    ? Colors.green
-                                    : project.verificationStatus == 'rejected'
-                                        ? Colors.red
-                                        : Colors.orange,
-                                fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: Image.network(
+                                  project.projectPicUrl,
+                                  height: 150,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                            Spacer(),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/creatorProjectDetails',
-                                  arguments: project,
-                                );
-                              },
-                              style: AppStyles.primaryButtonStyle.copyWith(
-                                padding: MaterialStateProperty.all(
-                                    EdgeInsets.symmetric(
-                                        vertical: 4.0, horizontal: 10.0)),
-                              ),
-                              child: Text(
-                                'See details',
+                              SizedBox(height: 10),
+                              Text(
+                                project.title,
                                 style: TextStyle(
-                                    fontSize: 12.0, color: Colors.white),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 5),
+                              Text(
+                                project.description,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              LinearProgressIndicator(
+                                value: project.currentFund / project.fundGoal,
+                                backgroundColor: Colors.grey[300],
+                                color: AppColors.primaryButton,
+                              ),
+                              SizedBox(height: 5),
+                              _text(
+                                  '${(project.currentFund / project.fundGoal * 100).toStringAsFixed(1)}% funded'),
+                              SizedBox(height: 5),
+                              _text('${project.backers.length} backers'),
+                              SizedBox(height: 5),
+                              _text(
+                                () {
+                                  if (project.projectStatus == 'completed') {
+                                    return 'Project Completed';
+                                  }
+                                  final duration = project.endDate
+                                      .difference(DateTime.now());
+                                  if (duration.inDays >= 2) {
+                                    return '${duration.inDays} days remaining';
+                                  } else {
+                                    return '${duration.inHours} hours remaining';
+                                  }
+                                }(),
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(
+                                    project.verificationStatus == 'verified'
+                                        ? Icons.verified
+                                        : project.verificationStatus ==
+                                                'rejected'
+                                            ? Icons.cancel
+                                            : Icons.error,
+                                    color:
+                                        project.verificationStatus == 'verified'
+                                            ? Colors.green
+                                            : project.verificationStatus ==
+                                                    'rejected'
+                                                ? Colors.red
+                                                : Colors.orange,
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    project.verificationStatus == 'verified'
+                                        ? 'Verified'
+                                        : project.verificationStatus ==
+                                                'rejected'
+                                            ? 'Rejected'
+                                            : 'Pending',
+                                    style: TextStyle(
+                                      color: project.verificationStatus ==
+                                              'verified'
+                                          ? Colors.green
+                                          : project.verificationStatus ==
+                                                  'rejected'
+                                              ? Colors.red
+                                              : Colors.orange,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/creatorProjectDetails',
+                                        arguments: project,
+                                      );
+                                    },
+                                    style:
+                                        AppStyles.primaryButtonStyle.copyWith(
+                                      padding: MaterialStateProperty.all(
+                                          EdgeInsets.symmetric(
+                                              vertical: 4.0, horizontal: 10.0)),
+                                    ),
+                                    child: Text(
+                                      'See details',
+                                      style: TextStyle(
+                                          fontSize: 12.0, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ),
       floatingActionButton: Padding(

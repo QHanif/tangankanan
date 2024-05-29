@@ -225,12 +225,16 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                                     _buildInfoRow(
                                       'Time Remaining',
                                       () {
+                                        if (project.projectStatus ==
+                                            'completed') {
+                                          return 'Project Completed';
+                                        }
                                         final duration = project.endDate
                                             .difference(DateTime.now());
                                         if (duration.inDays >= 2) {
-                                          return '${duration.inDays} days';
+                                          return '${duration.inDays} days to go';
                                         } else {
-                                          return '${duration.inHours} hours';
+                                          return '${duration.inHours} hours to go';
                                         }
                                       }(),
                                     ),

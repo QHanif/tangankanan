@@ -155,12 +155,16 @@ class _CreatorProjectDetailsPageState extends State<CreatorProjectDetailsPage> {
                                     _buildInfoRow(
                                       'Time Remaining',
                                       () {
+                                        if (project.projectStatus ==
+                                            'completed') {
+                                          return 'Project Completed';
+                                        }
                                         final duration = project.endDate
                                             .difference(DateTime.now());
                                         if (duration.inDays >= 2) {
-                                          return '${duration.inDays} days';
+                                          return '${duration.inDays} days remaining';
                                         } else {
-                                          return '${duration.inHours} hours';
+                                          return '${duration.inHours} hours remaining';
                                         }
                                       }(),
                                     ),
@@ -186,7 +190,11 @@ class _CreatorProjectDetailsPageState extends State<CreatorProjectDetailsPage> {
                               arguments: widget.project);
                         },
                       ),
-                      SizedBox(height: 10),
+                      AppStyles.buttonWithIcon('View Top Backers', Icons.people,
+                          () {
+                        Navigator.pushNamed(context, '/projectTopBackers',
+                            arguments: widget.project);
+                      }),
                       AppStyles.buttonWithIcon(
                         'Post Community Update',
                         Icons.update,
