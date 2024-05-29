@@ -115,14 +115,7 @@ class _CreatorProjectPageState extends State<CreatorProjectPage> {
                       elevation: 5,
                       margin: EdgeInsets.symmetric(vertical: 10),
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          gradient: LinearGradient(
-                            colors: [Color(0xFFCBDAFF), Colors.white],
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                          ),
-                        ),
+                        decoration: AppStyles().cardDecoration(),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(

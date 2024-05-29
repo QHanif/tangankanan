@@ -110,14 +110,7 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
                 elevation: 5,
                 margin: EdgeInsets.symmetric(vertical: 10),
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    gradient: LinearGradient(
-                      colors: [Color.fromARGB(0, 206, 200, 252), Colors.white],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                    ),
-                  ),
+                  decoration: AppStyles().cardDecoration(),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0), // Adjusted padding
                     child: Column(
