@@ -228,6 +228,14 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      // Check if an image is selected
+      if (_imageFile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please upload a project image')),
+        );
+        return;
+      }
+
       // Get the current user ID
       final userId = Auth().currentUser?.uid;
       if (userId == null) {

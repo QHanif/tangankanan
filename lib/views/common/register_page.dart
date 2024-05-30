@@ -154,7 +154,18 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         children: <Widget>[
           ListTile(
-            title: const Text('Backer'),
+            title: Row(
+              children: [
+                const Text('Backer'),
+                SizedBox(width: 5),
+                Tooltip(
+                  message: 'A backer supports projects by funding them.',
+                  child: Icon(Icons.help_outline, size: 16),
+                  showDuration: Duration(seconds: 2),
+                  waitDuration: Duration(milliseconds: 1),
+                ),
+              ],
+            ),
             leading: Radio<String>(
               value: 'backer',
               groupValue: _role,
@@ -166,7 +177,18 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           ListTile(
-            title: const Text('Creator'),
+            title: Row(
+              children: [
+                const Text('Project Creator'),
+                SizedBox(width: 5),
+                Tooltip(
+                  message: 'A project creator initiates and manages projects.',
+                  child: Icon(Icons.help_outline, size: 16),
+                  showDuration: Duration(seconds: 2),
+                  waitDuration: Duration(milliseconds: 1),
+                ),
+              ],
+            ),
             leading: Radio<String>(
               value: 'creator',
               groupValue: _role,

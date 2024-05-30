@@ -14,7 +14,8 @@ class PaymentPage extends StatefulWidget {
   _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _PaymentPageState extends State<PaymentPage>
+    with SingleTickerProviderStateMixin {
   final _amountController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
@@ -37,9 +38,12 @@ class _PaymentPageState extends State<PaymentPage> {
     'OCBC Bank',
   ];
 
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: _paymentMethods.length, vsync: this);
   }
 
   void _processPayment() async {
@@ -143,7 +147,7 @@ class _PaymentPageState extends State<PaymentPage> {
           },
           child: Card(
             color:
-                isSelected ? Color.fromARGB(255, 207, 232, 252) : Colors.white,
+                isSelected ? Color.fromARGB(255, 222, 222, 222) : Colors.white,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -223,6 +227,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     decoration: InputDecoration(
                       labelText: 'Enter contribution amount',
                       prefixText: 'RM ',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
@@ -232,46 +239,24 @@ class _PaymentPageState extends State<PaymentPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 5),
-                  Container(
-                    height: 525, // Adjust height as needed
-                    child: PageView.builder(
-                      itemCount: _paymentMethods.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: Container(
-                              decoration: AppStyles().cardDecoration(),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _paymentMethods[index],
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 20),
-                                    Expanded(
-                                      child: index == 0
-                                          ? _buildBankGrid()
-                                          : SingleChildScrollView(
-                                              child: _buildCardForm(),
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                  SizedBox(height: 20),
+                  TabBar(
+                    controller: _tabController,
+                    tabs: _paymentMethods
+                        .map((method) => Tab(text: method))
+                        .toList(),
                   ),
                   SizedBox(height: 20),
+                  Container(
+                    height: 400, // Adjust height as needed
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildBankGrid(),
+                        SingleChildScrollView(child: _buildCardForm()),
+                      ],
+                    ),
+                  ),
                   AppStyles.button('Confirm', _processPayment),
                   SizedBox(height: 20),
                   RichText(
@@ -280,15 +265,14 @@ class _PaymentPageState extends State<PaymentPage> {
                       style: TextStyle(color: Colors.grey),
                       children: [
                         TextSpan(
-                            text:
-                                'By hitting the button confirm, you agree with the '),
+                            text: 'By conforming you agree to Tangankanan’s '),
                         TextSpan(
-                          text: 'terms',
+                          text: 'Term of Use',
                           style: TextStyle(color: Colors.blue),
                         ),
                         TextSpan(text: ' and '),
                         TextSpan(
-                          text: 'conditions',
+                          text: ' Privacy Policy',
                           style: TextStyle(color: Colors.blue),
                         ),
                       ],
