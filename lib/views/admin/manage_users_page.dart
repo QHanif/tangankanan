@@ -54,7 +54,7 @@ class _ManageUsersPageState extends State<ManageUsersPage> {
               itemBuilder: (context, index) {
                 final user = users[index];
                 return Card(
-                  margin: EdgeInsets.all(10),
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(

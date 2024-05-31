@@ -98,7 +98,8 @@ class _ProjectCatalogPageState extends State<ProjectCatalogPage> {
       body: RefreshIndicator(
         onRefresh: _refreshProjects,
         child: Padding(
-          padding: const EdgeInsets.all(16.0), // Adjusted padding
+          padding:
+              const EdgeInsets.symmetric(horizontal: 16), // Adjusted padding
           child: ListView.builder(
             itemCount: _projects.length,
             itemBuilder: (context, index) {

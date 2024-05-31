@@ -29,11 +29,11 @@ class _PaymentPageState extends State<PaymentPage>
   final List<String> _banks = [
     'Maybank',
     'CIMB Bank',
-    'RHB',
+    'Bank Muamalat',
     'Public Bank',
     'AmBank',
     'Bank Islam',
-    'Bank Muamalat',
+    'RHB',
     'HSBC',
     'OCBC Bank',
   ];
@@ -119,51 +119,90 @@ class _PaymentPageState extends State<PaymentPage>
     final Map<String, String> bankLogos = {
       'Maybank': 'assets/bank_icon/maybank.png',
       'CIMB Bank': 'assets/bank_icon/cimb.png',
-      'RHB': 'assets/bank_icon/rhb.png',
+      'Bank Muamalat': 'assets/bank_icon/bank_muamalat.png',
       'Public Bank': 'assets/bank_icon/public_bank.png',
       'AmBank': 'assets/bank_icon/ambank.png',
       'Bank Islam': 'assets/bank_icon/bank_islam.png',
-      'Bank Muamalat': 'assets/bank_icon/bank_muamalat.png',
+      'RHB': 'assets/bank_icon/rhb.png',
       'HSBC': 'assets/bank_icon/hsbc.png',
       'OCBC Bank': 'assets/bank_icon/ocbc.png',
     };
 
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
       ),
-      itemCount: _banks.length,
-      itemBuilder: (context, index) {
-        final bank = _banks[index];
-        final isSelected = _selectedBank == bank;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              _selectedBank = bank;
-            });
-          },
-          child: Card(
-            color:
-                isSelected ? Color.fromARGB(255, 222, 222, 222) : Colors.white,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    bankLogos[bank]!,
-                    height: 80,
-                    width: 80,
-                  ),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
+      child: Container(
+        decoration: AppStyles().cardDecoration(),
+        padding: EdgeInsets.all(16.0),
+        child: GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 1,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
           ),
-        );
-      },
+          itemCount: _banks.length,
+          itemBuilder: (context, index) {
+            final bank = _banks[index];
+            final isSelected = _selectedBank == bank;
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedBank = bank;
+                });
+              },
+              child: Card(
+                color: isSelected
+                    ? Color.fromARGB(255, 222, 222, 222)
+                    : Colors.white,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        bankLogos[bank]!,
+                        height: 80,
+                        width: 80,
+                      ),
+                      SizedBox(height: 8),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardForm() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        decoration: AppStyles().cardDecoration(),
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _cardDetailTextfield(
+                'First Name', TextInputType.name, Icons.person),
+            SizedBox(height: 10),
+            _cardDetailTextfield('Last Name', TextInputType.name, Icons.person),
+            SizedBox(height: 10),
+            _cardDetailTextfield(
+                'Card Number', TextInputType.number, Icons.credit_card),
+            SizedBox(height: 10),
+            _cardDetailTextfield(
+                'Expiry Date', TextInputType.datetime, Icons.date_range),
+            SizedBox(height: 10),
+            _cardDetailTextfield('CVV', TextInputType.number, Icons.lock),
+          ],
+        ),
+      ),
     );
   }
 
@@ -178,24 +217,6 @@ class _PaymentPageState extends State<PaymentPage>
         prefixIcon: Icon(prefixIcon),
       ),
       keyboardType: keyboardType,
-    );
-  }
-
-  Widget _buildCardForm() {
-    return Column(
-      children: [
-        _cardDetailTextfield('First Name', TextInputType.name, Icons.person),
-        SizedBox(height: 10),
-        _cardDetailTextfield('Last Name', TextInputType.name, Icons.person),
-        SizedBox(height: 10),
-        _cardDetailTextfield(
-            'Card Number', TextInputType.number, Icons.credit_card),
-        SizedBox(height: 10),
-        _cardDetailTextfield(
-            'Expiry Date', TextInputType.datetime, Icons.date_range),
-        SizedBox(height: 10),
-        _cardDetailTextfield('CVV', TextInputType.number, Icons.lock),
-      ],
     );
   }
 
@@ -248,7 +269,8 @@ class _PaymentPageState extends State<PaymentPage>
                   ),
                   SizedBox(height: 20),
                   Container(
-                    height: 400, // Adjust height as needed
+                    height: MediaQuery.of(context).size.height *
+                        0.5, // Adjust the height as a percentage of screen height
                     child: TabBarView(
                       controller: _tabController,
                       children: [
@@ -258,22 +280,23 @@ class _PaymentPageState extends State<PaymentPage>
                     ),
                   ),
                   AppStyles.button('Confirm', _processPayment),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       style: TextStyle(color: Colors.grey),
                       children: [
                         TextSpan(
-                            text: 'By conforming you agree to Tangankanan’s '),
+                            text: 'By conforming you agree to Tangankanan\'s ',
+                            style: TextStyle(fontSize: 12)),
                         TextSpan(
                           text: 'Term of Use',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: Colors.blue, fontSize: 12),
                         ),
-                        TextSpan(text: ' and '),
+                        TextSpan(text: ' and ', style: TextStyle(fontSize: 12)),
                         TextSpan(
                           text: ' Privacy Policy',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: Colors.blue, fontSize: 12),
                         ),
                       ],
                     ),

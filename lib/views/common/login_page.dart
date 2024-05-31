@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(color: Colors.black),
           ),
           TextSpan(
-            text: "REGISTER",
+            text: "Register here!",
             style: TextStyle(
                 color: Color(0xFF273DFF), fontWeight: FontWeight.bold),
             recognizer: TapGestureRecognizer()
@@ -150,7 +150,10 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
           );
         },
-        child: Text("Forgot Password?"),
+        child: Text(
+          "Forgot Password?",
+          style: TextStyle(color: Colors.blue.shade900),
+        ),
       ),
     );
   }
