@@ -281,24 +281,28 @@ class _PaymentPageState extends State<PaymentPage>
                   ),
                   AppStyles.button('Confirm', _processPayment),
                   SizedBox(height: 10),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: TextStyle(color: Colors.grey),
-                      children: [
-                        TextSpan(
-                            text: 'By conforming you agree to Tangankanan\'s ',
-                            style: TextStyle(fontSize: 12)),
-                        TextSpan(
-                          text: 'Term of Use',
-                          style: TextStyle(color: Colors.blue, fontSize: 12),
-                        ),
-                        TextSpan(text: ' and ', style: TextStyle(fontSize: 12)),
-                        TextSpan(
-                          text: ' Privacy Policy',
-                          style: TextStyle(color: Colors.blue, fontSize: 12),
-                        ),
-                      ],
+                  Center(
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                              text:
+                                  'By conforming you agree to Tangankanan\'s ',
+                              style: TextStyle(fontSize: 12)),
+                          TextSpan(
+                            text: 'Term of Use',
+                            style: TextStyle(color: Colors.blue, fontSize: 12),
+                          ),
+                          TextSpan(
+                              text: ' and ', style: TextStyle(fontSize: 12)),
+                          TextSpan(
+                            text: ' Privacy Policy',
+                            style: TextStyle(color: Colors.blue, fontSize: 12),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

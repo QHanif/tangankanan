@@ -53,93 +53,133 @@ class _ManageUsersPageState extends State<ManageUsersPage> {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 final user = users[index];
+
                 return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 5,
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(user.profilePictureUrl),
-                              radius: 30,
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  user.username,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: user.role == 'backer'
+                          ? LinearGradient(
+                              colors: [Colors.white, Colors.lightBlue.shade100],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : user.role == 'creator'
+                              ? LinearGradient(
+                                  colors: [
+                                    Colors.white,
+                                    Colors.lightGreen.shade100
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : null,
+                      color: user.role != 'backer' && user.role != 'creator'
+                          ? Colors.white
+                          : null,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(user.profilePictureUrl),
+                                radius: 30,
+                              ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    user.username,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                ),
-                                Text(user.email),
-                                Text('Role: ${user.role}'),
-                              ],
-                            ),
-                            Spacer(),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Handle user deletion
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Delete User'),
-                                      content: Text(
-                                          'Are you sure you want to delete this user?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .pop(); // Dismiss alert dialog
-                                          },
-                                          child: Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              if (user.userId.isNotEmpty) {
-                                                await Auth()
-                                                    .deleteUser(user.userId);
-                                                await DatabaseService()
-                                                    .deleteUser(user.userId);
-                                                await DatabaseService()
-                                                    .deleteUserProfileImage(
-                                                        user.userId);
+                                  Text(user.email),
+                                  Text(
+                                    user.role.toUpperCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: user.role == 'backer'
+                                          ? Colors.blue.shade800
+                                          : user.role == 'creator'
+                                              ? Colors.green.shade800
+                                              : Colors
+                                                  .black, // Default color for other roles
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Handle user deletion
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Delete User'),
+                                        content: Text(
+                                            'Are you sure you want to delete this user?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Dismiss alert dialog
+                                            },
+                                            child: Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              try {
+                                                if (user.userId.isNotEmpty) {
+                                                  await Auth()
+                                                      .deleteUser(user.userId);
+                                                  await DatabaseService()
+                                                      .deleteUser(user.userId);
+                                                  await DatabaseService()
+                                                      .deleteUserProfileImage(
+                                                          user.userId);
+                                                  print(
+                                                      'User and profile picture deleted successfully');
+                                                  await _refreshUsers(); // Refresh the user list
+                                                } else {
+                                                  print('User ID is empty');
+                                                }
+                                              } catch (e) {
                                                 print(
-                                                    'User and profile picture deleted successfully');
-                                                await _refreshUsers(); // Refresh the user list
-                                              } else {
-                                                print('User ID is empty');
+                                                    'Error deleting user or profile picture: $e');
                                               }
-                                            } catch (e) {
-                                              print(
-                                                  'Error deleting user or profile picture: $e');
-                                            }
-                                            Navigator.of(context)
-                                                .pop(); // Dismiss alert dialog
-                                          },
-                                          child: Text('Delete'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: Text('Delete User',
-                                  style: TextStyle(color: Colors.white)),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red),
-                            ),
-                          ],
-                        ),
-                      ],
+                                              Navigator.of(context)
+                                                  .pop(); // Dismiss alert dialog
+                                            },
+                                            child: Text('Delete'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text('Delete User',
+                                    style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

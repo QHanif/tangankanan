@@ -31,6 +31,38 @@ class Project {
     required this.projectStatus,
   });
 
+  Project copyWith({
+    String? projectId,
+    String? creatorId,
+    String? title,
+    String? description,
+    String? projectPicUrl,
+    double? fundGoal,
+    double? currentFund,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? verificationStatus,
+    List<String>? backers,
+    List<String>? updates,
+    String? projectStatus,
+  }) {
+    return Project(
+      projectId: projectId ?? this.projectId,
+      creatorId: creatorId ?? this.creatorId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      projectPicUrl: projectPicUrl ?? this.projectPicUrl,
+      fundGoal: fundGoal ?? this.fundGoal,
+      currentFund: currentFund ?? this.currentFund,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      verificationStatus: verificationStatus ?? this.verificationStatus,
+      backers: backers ?? this.backers,
+      updates: updates ?? this.updates,
+      projectStatus: projectStatus ?? this.projectStatus,
+    );
+  }
+
   factory Project.fromMap(Map<String, dynamic> map) {
     return Project(
       projectId: map['projectId'],

@@ -18,6 +18,7 @@ import 'package:tangankanan/views/creators/funding_progress_page.dart'; // Impor
 import 'package:tangankanan/views/admin/admin_homepage.dart';
 import 'package:tangankanan/app_root.dart';
 import 'package:tangankanan/models/project.dart';
+import 'package:tangankanan/views/admin/update_project_page.dart';
 
 // Define the routes
 final Map<String, WidgetBuilder> routes = {
@@ -64,6 +65,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final project = settings.arguments as Project;
       return MaterialPageRoute(
           builder: (context) => FundingProgressPage(project: project));
+    case '/updateProject':
+      final project = settings.arguments as Project;
+      return MaterialPageRoute(
+          builder: (context) => UpdateProjectPage(project: project));
     default:
       return MaterialPageRoute(builder: (context) => AppRoot());
   }
